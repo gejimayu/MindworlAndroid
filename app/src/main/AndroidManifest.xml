@@ -16,6 +16,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".WriteActivity"
+            android:label="@string/title_activity_write"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mindworld.howtosurvive.mindworld.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
