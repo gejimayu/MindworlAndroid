@@ -33,7 +33,7 @@
         android:layout_below="@+id/appBarLayout"
         android:background="@android:color/transparent"
         android:gravity="top|start"
-        android:hint="Write your memory here" />
+        android:hint="@string/write_memory_hint" />
 
     <Button
         android:id="@+id/button"
@@ -43,7 +43,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:background="@color/colorPrimary"
-        android:text="Send"
+        android:text="@string/write_memory_button"
         android:textColor="#FFFFFF" />
 
 </RelativeLayout>

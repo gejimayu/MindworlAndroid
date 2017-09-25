@@ -20,9 +20,9 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         // Set the text for each tab.
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_label1));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_label2));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_label3));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_texts_label));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_images_label));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_videos_label));
         // Set the tabs to fill the entire layout.
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
