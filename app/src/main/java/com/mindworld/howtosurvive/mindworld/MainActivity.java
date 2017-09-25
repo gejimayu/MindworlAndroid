@@ -1,10 +1,12 @@
 package com.mindworld.howtosurvive.mindworld;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,5 +48,10 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+    }
+
+    public void writeNote(View view) {
+        Intent intent = new Intent(this, WriteActivity.class);
+        startActivity(intent);
     }
 }

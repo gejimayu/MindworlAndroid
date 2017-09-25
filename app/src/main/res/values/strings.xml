@@ -20,4 +20,9 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="writeHint">Write your memory here</string>
+    <string name="writeSave">Done</string>
+
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_write">Write Activity</string>
 </resources>
