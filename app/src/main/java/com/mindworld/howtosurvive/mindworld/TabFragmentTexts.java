@@ -16,6 +16,6 @@ public class TabFragmentTexts extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.tab_fragment1, container, false);
+        return inflater.inflate(R.layout.tab_fragment_texts, container, false);
     }
 }
