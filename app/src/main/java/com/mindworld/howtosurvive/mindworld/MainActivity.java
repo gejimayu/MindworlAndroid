@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void writeNote(View view) {
+    public void writeMemory(View view) {
         Intent intent = new Intent(this, WriteActivity.class);
         startActivity(intent);
     }

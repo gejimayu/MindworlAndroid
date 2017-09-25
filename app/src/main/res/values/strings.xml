@@ -1,12 +1,13 @@
 <resources>
+    <!-- Strings related to activities -->
     <string name="app_name">Mindworld</string>
+    <string name="title_activity_write">Write Memory</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to tabs -->
     <string name="tab_label1">Texts</string>
     <string name="tab_label2">Images</string>
     <string name="tab_label3">Videos</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -20,9 +21,11 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <!-- Strings related to writing memory -->
     <string name="writeHint">Write your memory here</string>
     <string name="writeSave">Done</string>
+    <string name="sign_in_button">Sign in with Google</string>
+    <string name="mindworld_logo_description">Mindworld logo</string>
 
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="title_activity_write">Write Activity</string>
 </resources>
