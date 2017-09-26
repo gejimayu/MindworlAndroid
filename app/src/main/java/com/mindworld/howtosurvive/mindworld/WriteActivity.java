@@ -26,6 +26,7 @@ public class WriteActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // initialize Firebase Cloud Storage reference
         mStorageRef = FirebaseStorage.getInstance().getReference();
     }
 
@@ -42,16 +43,18 @@ public class WriteActivity extends AppCompatActivity {
             outputStream.write(text.getBytes());
             outputStream.close();
 
+            // get memory.txt's URI
             File file = new File(getFilesDir() + "/" + filename);
-
-            // upload memory.txt to Firebase storage
             Uri fileUri = Uri.fromFile(file);
+            // build memory.txt metadata
             StorageMetadata metadata = new StorageMetadata.Builder()
                     .setContentType("text/plain")
                     .build();
+            // upload memory.txt to Firebase Cloud Storage
             StorageReference memoryRef = mStorageRef.child(fileUri.getLastPathSegment());
             UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
+            // delete memory.txt
             file.delete();
         } catch (Exception e) {
             e.printStackTrace();

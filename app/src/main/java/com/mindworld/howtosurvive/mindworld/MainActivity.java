@@ -26,39 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
     private StorageReference mStorageRef;
 
-    private void getMemory() {
-        // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
-        // browser.
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-
-        // Filter to only show results that can be "opened", such as a
-        // file (as opposed to a list of contacts or timezones)
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        // Filter to show only images, using the image MIME data type.
-        intent.setType("text/plain");
-        intent.setType("image/*");
-        intent.setType("video/*");
-
-        startActivityForResult(intent, READ_FILE_BROWSER_REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == READ_FILE_BROWSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                Uri fileUri = data.getData();
-                String mimetype = getContentResolver().getType(fileUri);
-                StorageMetadata metadata = new StorageMetadata.Builder()
-                        .setContentType(mimetype)
-                        .build();
-                StorageReference memoryRef = mStorageRef.child(fileUri.getLastPathSegment());
-                UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
-            }
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // initialize Firebase Cloud Storage reference
         mStorageRef = FirebaseStorage.getInstance().getReference();
     }
 
@@ -106,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case READ_EXTERNAL_STORAGE_REQUEST_CODE: {
+                // permission to read external storage granted
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getMemory();
@@ -114,8 +83,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == READ_FILE_BROWSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                // get selected file's URI
+                Uri fileUri = data.getData();
+                // build file metadata
+                String mimetype = getContentResolver().getType(fileUri);
+                StorageMetadata metadata = new StorageMetadata.Builder()
+                        .setContentType(mimetype)
+                        .build();
+                // upload file to Firebase Cloud Storage
+                StorageReference memoryRef = mStorageRef.child(fileUri.getLastPathSegment());
+                UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
+            }
+        }
+    }
+
+    public void writeMemory(View view) {
+        Intent intent = new Intent(this, WriteActivity.class);
+        startActivity(intent);
+    }
+
     public void uploadMemory(View view) {
-        // check READ_EXTERNAL_STORAGE permission
+        // check permission to read external storage
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -126,8 +119,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void writeMemory(View view) {
-        Intent intent = new Intent(this, WriteActivity.class);
-        startActivity(intent);
+    private void getMemory() {
+        // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
+        // browser.
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+        // Filter to only show results that can be "opened", such as a
+        // file (as opposed to a list of contacts or timezones)
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        // Filter to show only texts, images, and videos using their MIME data types.
+        intent.setType("text/plain");
+        intent.setType("image/*");
+        intent.setType("video/*");
+
+        startActivityForResult(intent, READ_FILE_BROWSER_REQUEST_CODE);
     }
 }
