@@ -5,11 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -46,8 +46,11 @@ public class WriteActivity extends AppCompatActivity {
 
             // upload memory.txt to Firebase storage
             Uri fileUri = Uri.fromFile(file);
-            StorageReference riversRef = mStorageRef.child(fileUri.getLastPathSegment());
-            UploadTask uploadTask = riversRef.putFile(fileUri);
+            StorageMetadata metadata = new StorageMetadata.Builder()
+                    .setContentType("plain/txt")
+                    .build();
+            StorageReference memoryRef = mStorageRef.child(fileUri.getLastPathSegment());
+            UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
             file.delete();
         } catch (Exception e) {
