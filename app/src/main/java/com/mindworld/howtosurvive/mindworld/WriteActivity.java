@@ -29,7 +29,7 @@ public class WriteActivity extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference();
     }
 
-    public void saveMemory(View view) {
+    public void sendMemory(View view) {
         EditText memoryText = (EditText) findViewById(R.id.memory_text);
         String text = memoryText.getText().toString();
 
@@ -47,7 +47,7 @@ public class WriteActivity extends AppCompatActivity {
             // upload memory.txt to Firebase storage
             Uri fileUri = Uri.fromFile(file);
             StorageMetadata metadata = new StorageMetadata.Builder()
-                    .setContentType("plain/txt")
+                    .setContentType("text/plain")
                     .build();
             StorageReference memoryRef = mStorageRef.child(fileUri.getLastPathSegment());
             UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);

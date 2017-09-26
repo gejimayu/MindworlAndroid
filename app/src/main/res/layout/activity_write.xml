@@ -45,7 +45,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:background="@color/colorPrimary"
-        android:onClick="saveMemory"
+        android:onClick="sendMemory"
         android:text="@string/write_memory_button"
         android:textColor="#FFFFFF"
         android:layout_alignParentLeft="true"
