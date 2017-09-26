@@ -122,16 +122,16 @@ public class MainActivity extends AppCompatActivity {
     private void getMemory() {
         // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
         // browser.
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 
         // Filter to only show results that can be "opened", such as a
         // file (as opposed to a list of contacts or timezones)
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
         // Filter to show only texts, images, and videos using their MIME data types.
-        intent.setType("text/plain");
-        intent.setType("image/*");
-        intent.setType("video/*");
+        String[] mimeTypes = {"text/plain", "image/*", "video/*"};
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 
         startActivityForResult(intent, READ_FILE_BROWSER_REQUEST_CODE);
     }
