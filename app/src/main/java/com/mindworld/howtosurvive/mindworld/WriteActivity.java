@@ -56,6 +56,8 @@ public class WriteActivity extends AppCompatActivity {
 
             // delete memory.txt
             file.delete();
+
+            finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
