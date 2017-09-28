@@ -2,6 +2,7 @@ package com.mindworld.howtosurvive.mindworld;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -14,15 +15,20 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import com.mindworld.howtosurvive.mindworld.WriteActivity;
+import com.mindworld.howtosurvive.mindworld.models.ImageFile;
 import com.mindworld.howtosurvive.mindworld.models.TextFile;
 
 import java.io.BufferedReader;
@@ -37,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2;
     private final String[] mimeTypes = {"text/plain", "image/*", "video/*"};
     private StorageReference mStorageRef;
+    private DatabaseReference mDatabase;
+    String TempImageName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
         // initialize Firebase Cloud Storage reference
         mStorageRef = FirebaseStorage.getInstance().getReference();
+        // initialize Firebase Database
+        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -111,6 +121,29 @@ public class MainActivity extends AppCompatActivity {
                 StorageReference memoryRef = mStorageRef.child(fileUri.getLastPathSegment());
                 UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
+                //getting image name
+                TempImageName = fileUri.getLastPathSegment();
+
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getApplicationContext(), "Upload failed ", Toast.LENGTH_LONG).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        @SuppressWarnings("VisibleForTests")
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        // Showing toast message after done uploading.
+                        Toast.makeText(getApplicationContext(), "Image Uploaded Successfully ", Toast.LENGTH_LONG).show();
+                        @SuppressWarnings("VisibleForTests")
+                        ImageFile imageUploadInfo = new ImageFile(TempImageName, taskSnapshot.getDownloadUrl().toString());
+                        //push into database
+                        DatabaseReference db = mDatabase.child("image").push();
+                        db.setValue(imageUploadInfo);
+                    }
+                });
             }
         }
     }

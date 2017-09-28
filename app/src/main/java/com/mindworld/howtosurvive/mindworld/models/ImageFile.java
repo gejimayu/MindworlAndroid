@@ -14,4 +14,12 @@ public class ImageFile {
         this.name = name;
         this.url = url;
     }
+
+    public String getImageName() {
+        return name;
+    }
+
+    public String getImageURL() {
+        return url;
+    }
 }
