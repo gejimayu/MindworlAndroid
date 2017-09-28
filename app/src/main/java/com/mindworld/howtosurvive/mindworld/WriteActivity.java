@@ -64,20 +64,9 @@ public class WriteActivity extends AppCompatActivity {
             // delete memory.txt
             file.delete();
 
-            // write to DB
-            int stringLength = (text.length() < 20) ? (text.length() - 1) : 20;
-            writeNewTextFileDB("blomdibuat", "steve", "blmdibuat", text.substring(0, stringLength));
-
             finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void writeNewTextFileDB(String userId, String username, String title, String body) {
-        TextFile item = new TextFile(userId, username, title, body);
-
-        DatabaseReference newItem = mDatabase.child("TextItem");
-        newItem.push().setValue(item);
     }
 }
