@@ -25,6 +25,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private static final String TAG = "GoogleActivity";
+    public static final String EXTRA_MESSAGE = "com.mindworld.howtosurvive.mindworld.extra.MESSAGE";
 
     private static final int SIGN_IN_REQUEST_CODE = 1001;
 
@@ -123,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             findViewById(R.id.sign_in).setVisibility(View.GONE);
             Intent intent = new Intent(this, MainActivity.class);
             String message = user.getUid();
-            intent.putExtra("user_id", message);
+            intent.putExtra(EXTRA_MESSAGE, message);
             startActivity(intent);
         } else {
             findViewById(R.id.sign_in).setVisibility(View.VISIBLE);
