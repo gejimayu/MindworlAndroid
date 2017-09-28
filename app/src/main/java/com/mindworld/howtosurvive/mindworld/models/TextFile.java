@@ -10,4 +10,8 @@ public class TextFile {
     public TextFile(String title) {
         this.title = title;
     }
+
+    public String getName() {
+        return title;
+    }
 }
