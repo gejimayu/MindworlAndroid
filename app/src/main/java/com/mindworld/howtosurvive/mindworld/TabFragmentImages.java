@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,20 +57,32 @@ public class TabFragmentImages extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference("image");
 
         // Adding Add Value Event Listener to databaseReference.
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onChildAdded(DataSnapshot snapshot, String prevChildKey) {
 
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                ImageFile imageUploadInfo = snapshot.getValue(ImageFile.class);
 
-                    ImageFile imageUploadInfo = postSnapshot.getValue(ImageFile.class);
-
-                    list.add(imageUploadInfo);
-                }
+                list.add(imageUploadInfo);
 
                 adapter = new RecyclerViewAdapterImage(view.getContext(), list);
 
                 recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
