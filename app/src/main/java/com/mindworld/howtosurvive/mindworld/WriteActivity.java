@@ -74,7 +74,6 @@ public class WriteActivity extends AppCompatActivity {
         }
     }
 
-    // [START write_fan_out]
     private void writeNewTextFileDB(String userId, String username, String title, String body) {
         TextFile item = new TextFile(userId, username, title, body);
 

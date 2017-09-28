@@ -15,15 +15,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import com.mindworld.howtosurvive.mindworld.WriteActivity;
+import com.mindworld.howtosurvive.mindworld.models.TextFile;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import static android.R.attr.mimeType;
+
 public class MainActivity extends AppCompatActivity {
     private final int READ_FILE_BROWSER_REQUEST_CODE = 1;
     private final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2;
-
+    private final String[] mimeTypes = {"text/plain", "image/*", "video/*"};
     private StorageReference mStorageRef;
 
     @Override
@@ -98,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 // upload file to Firebase Cloud Storage
                 StorageReference memoryRef = mStorageRef.child(fileUri.getLastPathSegment());
                 UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
+
             }
         }
     }
@@ -129,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
         // Filter to show only texts, images, and videos using their MIME data types.
-        String[] mimeTypes = {"text/plain", "image/*", "video/*"};
         intent.setType("*/*");
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 
