@@ -8,16 +8,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mindworld.howtosurvive.mindworld.models.TextFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 
 public class WriteActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,9 @@ public class WriteActivity extends AppCompatActivity {
 
         // initialize Firebase Cloud Storage reference
         mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        //initialize Firebase Database Reference
+        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     public void sendMemory(View view) {
@@ -57,9 +64,21 @@ public class WriteActivity extends AppCompatActivity {
             // delete memory.txt
             file.delete();
 
+            // write to DB
+            int stringLength = (text.length() < 20) ? (text.length() - 1) : 20;
+            writeNewTextFileDB("blomdibuat", "steve", "blmdibuat", text.substring(0, stringLength));
+
             finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    // [START write_fan_out]
+    private void writeNewTextFileDB(String userId, String username, String title, String body) {
+        TextFile item = new TextFile(userId, username, title, body);
+
+        DatabaseReference newItem = mDatabase.child("TextItem");
+        newItem.push().setValue(item);
     }
 }
