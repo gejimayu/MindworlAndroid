@@ -13,9 +13,10 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+    private static final int SIGN_IN_REQUEST_CODE = 1001;
+
     GoogleApiClient mGoogleApiClient;
-    SignInButton signInButton;
-    private static final int RC_SIGN_IN = 9001;
+    SignInButton mSignInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +32,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        signInButton = (SignInButton) findViewById(R.id.sign_in);
-        signInButton.setOnClickListener(this);
+        mSignInButton = (SignInButton) findViewById(R.id.sign_in);
+        mSignInButton.setOnClickListener(this);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        startActivityForResult(signInIntent, SIGN_IN_REQUEST_CODE);
     }
 
     @Override

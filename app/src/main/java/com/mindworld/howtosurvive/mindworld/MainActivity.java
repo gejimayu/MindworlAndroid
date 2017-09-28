@@ -21,8 +21,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class MainActivity extends AppCompatActivity {
-    private final int READ_FILE_BROWSER_REQUEST_CODE = 1;
-    private final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2;
+    private final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
+    private final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
 
     private StorageReference mStorageRef;
 
