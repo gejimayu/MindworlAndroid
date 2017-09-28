@@ -2,7 +2,6 @@ package com.mindworld.howtosurvive.mindworld;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -22,21 +21,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import com.mindworld.howtosurvive.mindworld.WriteActivity;
 import com.mindworld.howtosurvive.mindworld.models.ImageFile;
 import com.mindworld.howtosurvive.mindworld.models.TextFile;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import static android.R.attr.mimeType;
 
 public class MainActivity extends AppCompatActivity {
     private final int READ_FILE_BROWSER_REQUEST_CODE = 1;
@@ -44,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private final String[] mimeTypes = {"text/plain", "image/*", "video/*"};
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
-    String TempImageName;
+    String TempName;
+    String mimetype;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 // get selected file's URI
                 Uri fileUri = data.getData();
                 // build file metadata
-                String mimetype = getContentResolver().getType(fileUri);
+                mimetype = getContentResolver().getType(fileUri);
                 StorageMetadata metadata = new StorageMetadata.Builder()
                         .setContentType(mimetype)
                         .build();
@@ -122,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
                 //getting image name
-                TempImageName = fileUri.getLastPathSegment();
+                TempName = fileUri.getLastPathSegment();
 
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -137,11 +129,22 @@ public class MainActivity extends AppCompatActivity {
                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         // Showing toast message after done uploading.
                         Toast.makeText(getApplicationContext(), "Image Uploaded Successfully ", Toast.LENGTH_LONG).show();
-                        @SuppressWarnings("VisibleForTests")
-                        ImageFile imageUploadInfo = new ImageFile(TempImageName, taskSnapshot.getDownloadUrl().toString());
-                        //push into database
-                        DatabaseReference db = mDatabase.child("image").push();
-                        db.setValue(imageUploadInfo);
+
+                        DatabaseReference db;
+                        if (mimetype.contains("image")) {
+                            @SuppressWarnings("VisibleForTests")
+                            ImageFile imageUploadInfo = new ImageFile(TempName,
+                                    taskSnapshot.getDownloadUrl().toString());
+                            //push into database
+                            db = mDatabase.child("image").push();
+                            db.setValue(imageUploadInfo);
+                        }
+                        else
+                        if (mimetype.contains("text")) {
+                            TextFile txt = new TextFile(TempName);
+                            db = mDatabase.child("text").push();
+                            db.setValue(txt);
+                        }
                     }
                 });
             }
