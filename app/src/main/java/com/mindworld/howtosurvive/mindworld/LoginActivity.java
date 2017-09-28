@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
     FirebaseAuth mAuth;
-    private static final int RC_MAIN_ACTIVITY = 9000;
+    
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "GoogleActivity";
 
@@ -66,7 +66,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             findViewById(R.id.sign_in).setVisibility(View.GONE);
             Intent intent = new Intent(this, MainActivity.class);
             String message = user.getUid();
-            startActivityForResult(intent, RC_MAIN_ACTIVITY);
+            intent.putExtra("user_id", message);
+            startActivity(intent);
         } else {
             findViewById(R.id.sign_in).setVisibility(View.VISIBLE);
         }
