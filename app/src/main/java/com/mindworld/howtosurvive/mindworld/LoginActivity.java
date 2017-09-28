@@ -12,7 +12,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
     private static final int RC_SIGN_IN = 9001;
@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         signIn();
     }
 
-    private void signIn(){
+    private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
