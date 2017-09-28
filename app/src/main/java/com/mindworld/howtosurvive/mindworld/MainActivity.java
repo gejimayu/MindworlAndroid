@@ -21,8 +21,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
+
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
+
+    private String mUserId;
 
     private StorageReference mStorageRef;
 
@@ -64,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // initialize User ID from Firebase Authentication
+        mUserId = getIntent().getStringExtra(LoginActivity.EXTRA_UID);
+
         // initialize Firebase Cloud Storage reference
         mStorageRef = FirebaseStorage.getInstance().getReference();
     }
@@ -96,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                         .setContentType(mimetype)
                         .build();
                 // upload file to Firebase Cloud Storage
-                StorageReference memoryRef = mStorageRef.child(fileUri.getLastPathSegment());
+                StorageReference memoryRef = mStorageRef.child("user/" + mUserId + "/" + fileUri.getLastPathSegment());
                 UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
             }
         }
@@ -104,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void writeMemory(View view) {
         Intent intent = new Intent(this, WriteActivity.class);
+        intent.putExtra(EXTRA_UID, mUserId);
+
         startActivity(intent);
     }
 
