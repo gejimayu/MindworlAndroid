@@ -18,6 +18,7 @@
 
     <string name="write_hint">Write your memory here</string>
     <string name="write_memory_button">Send</string>
-    <string name="write_memory_hint">Write your memory here</string>
+    <string name="memory_text_hint">Write your memory here</string>
     <string name="write_save">Done</string>
+    <string name="memory_name_hint">Memory name</string>
 </resources>
