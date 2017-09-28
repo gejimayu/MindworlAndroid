@@ -27,6 +27,7 @@ import com.google.firebase.storage.UploadTask;
 
 import com.mindworld.howtosurvive.mindworld.models.ImageFile;
 import com.mindworld.howtosurvive.mindworld.models.TextFile;
+import com.mindworld.howtosurvive.mindworld.models.VideoFile;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -143,6 +144,12 @@ public class MainActivity extends AppCompatActivity {
                         if (mimetype.contains("text")) {
                             TextFile txt = new TextFile(TempName);
                             db = mDatabase.child("text").push();
+                            db.setValue(txt);
+                        }
+                        else
+                        if (mimetype.contains("video")) {
+                            VideoFile txt = new VideoFile(TempName);
+                            db = mDatabase.child("video").push();
                             db.setValue(txt);
                         }
                     }
