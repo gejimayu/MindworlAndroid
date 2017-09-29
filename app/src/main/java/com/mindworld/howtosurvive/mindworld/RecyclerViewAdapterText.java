@@ -12,13 +12,10 @@ import com.mindworld.howtosurvive.mindworld.models.TextFile;
 import java.util.List;
 
 public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAdapterText.ViewHolder> {
+    private List<TextFile> MainTextUploadInfoList;
 
-    Context context;
-    List<TextFile> MainTextUploadInfoList;
-
-    public RecyclerViewAdapterText(Context context, List<TextFile> TempList) {
-        this.MainTextUploadInfoList = TempList;
-        this.context = context;
+    public RecyclerViewAdapterText(Context context, List<TextFile> textFileList) {
+        this.MainTextUploadInfoList = textFileList;
     }
 
     @Override
@@ -41,9 +38,9 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textNameTextView;
+        private TextView textNameTextView;
 
-        public ViewHolder(View itemView) {
+        private ViewHolder(View itemView) {
             super(itemView);
 
             textNameTextView = itemView.findViewById(R.id.item_text_name);

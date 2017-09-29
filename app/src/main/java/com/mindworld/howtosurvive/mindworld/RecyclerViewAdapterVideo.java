@@ -12,13 +12,10 @@ import com.mindworld.howtosurvive.mindworld.models.VideoFile;
 import java.util.List;
 
 public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewAdapterVideo.ViewHolder> {
+    private List<VideoFile> MainVideoUploadInfoList;
 
-    Context context;
-    List<VideoFile> MainVideoUploadInfoList;
-
-    public RecyclerViewAdapterVideo(Context context, List<VideoFile> TempList) {
-        this.MainVideoUploadInfoList = TempList;
-        this.context = context;
+    public RecyclerViewAdapterVideo(Context context, List<VideoFile> videoFileList) {
+        this.MainVideoUploadInfoList = videoFileList;
     }
 
     @Override
@@ -41,9 +38,9 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView videoNameTextView;
+        private TextView videoNameTextView;
 
-        public ViewHolder(View itemView) {
+        private ViewHolder(View itemView) {
             super(itemView);
 
             videoNameTextView = itemView.findViewById(R.id.item_video_name);

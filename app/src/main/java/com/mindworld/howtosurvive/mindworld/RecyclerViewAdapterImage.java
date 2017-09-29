@@ -14,13 +14,11 @@ import com.mindworld.howtosurvive.mindworld.models.ImageFile;
 import java.util.List;
 
 public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewAdapterImage.ViewHolder> {
+    private Context context;
+    private List<ImageFile> MainImageUploadInfoList;
 
-    Context context;
-    List<ImageFile> MainImageUploadInfoList;
-
-    public RecyclerViewAdapterImage(Context context, List<ImageFile> TempList) {
-
-        this.MainImageUploadInfoList = TempList;
+    public RecyclerViewAdapterImage(Context context, List<ImageFile> imageFileList) {
+        this.MainImageUploadInfoList = imageFileList;
 
         this.context = context;
     }
@@ -49,15 +47,15 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView imageView;
-        public TextView imageNameTextView;
+        private ImageView imageView;
+        private TextView imageNameTextView;
 
-        public ViewHolder(View itemView) {
+        private ViewHolder(View itemView) {
             super(itemView);
 
             imageView = (ImageView) itemView.findViewById(R.id.item_image);
 
-            imageNameTextView = (TextView) itemView.findViewById(R.id.item_name);
+            imageNameTextView = (TextView) itemView.findViewById(R.id.item_image_name);
         }
     }
 }

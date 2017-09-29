@@ -58,7 +58,6 @@ public class TabFragmentImages extends Fragment {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String prevChildKey) {
-
                 ImageFile imageUploadInfo = snapshot.getValue(ImageFile.class);
 
                 list.add(imageUploadInfo);

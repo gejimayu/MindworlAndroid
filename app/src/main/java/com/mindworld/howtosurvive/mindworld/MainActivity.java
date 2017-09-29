@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
-    String TempName;
+    String filename;
     String mimetype;
     private String mUserId;
     private StorageReference mStorageRef;
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
                 //getting image name
-                TempName = fileUri.getLastPathSegment();
+                filename = fileUri.getLastPathSegment();
 
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -145,17 +145,17 @@ public class MainActivity extends AppCompatActivity {
                         DatabaseReference db;
                         if (mimetype.contains("image")) {
                             @SuppressWarnings("VisibleForTests")
-                            ImageFile imageUploadInfo = new ImageFile(TempName,
+                            ImageFile imageUploadInfo = new ImageFile(filename,
                                     taskSnapshot.getDownloadUrl().toString());
                             //push into database
                             db = mDatabase.child("image").push();
                             db.setValue(imageUploadInfo);
                         } else if (mimetype.contains("text")) {
-                            TextFile txt = new TextFile(TempName);
+                            TextFile txt = new TextFile(filename);
                             db = mDatabase.child("text").push();
                             db.setValue(txt);
                         } else if (mimetype.contains("video")) {
-                            VideoFile txt = new VideoFile(TempName);
+                            VideoFile txt = new VideoFile(filename);
                             db = mDatabase.child("video").push();
                             db.setValue(txt);
                         }
