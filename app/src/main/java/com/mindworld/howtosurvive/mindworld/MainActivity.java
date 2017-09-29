@@ -25,7 +25,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import com.mindworld.howtosurvive.mindworld.models.ImageFile;
 import com.mindworld.howtosurvive.mindworld.models.TextFile;
 import com.mindworld.howtosurvive.mindworld.models.VideoFile;
@@ -36,13 +35,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
-
-    private String mUserId;
-    
-    private StorageReference mStorageRef;
-    private DatabaseReference mDatabase;
     String TempName;
     String mimetype;
+    private String mUserId;
+    private StorageReference mStorageRef;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,15 +150,11 @@ public class MainActivity extends AppCompatActivity {
                             //push into database
                             db = mDatabase.child("image").push();
                             db.setValue(imageUploadInfo);
-                        }
-                        else
-                        if (mimetype.contains("text")) {
+                        } else if (mimetype.contains("text")) {
                             TextFile txt = new TextFile(TempName);
                             db = mDatabase.child("text").push();
                             db.setValue(txt);
-                        }
-                        else
-                        if (mimetype.contains("video")) {
+                        } else if (mimetype.contains("video")) {
                             VideoFile txt = new VideoFile(TempName);
                             db = mDatabase.child("video").push();
                             db.setValue(txt);

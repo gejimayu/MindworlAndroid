@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.mindworld.howtosurvive.mindworld.models.VideoFile;
 
@@ -26,7 +25,7 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_video, parent, false);
 
-        return  new ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override

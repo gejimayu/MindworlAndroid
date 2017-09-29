@@ -1,6 +1,5 @@
 package com.mindworld.howtosurvive.mindworld;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +13,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.mindworld.howtosurvive.mindworld.models.ImageFile;
 
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ public class TabFragmentImages extends Fragment {
     RecyclerView recyclerView;
 
     // Creating RecyclerView.Adapter.
-    RecyclerView.Adapter adapter ;
+    RecyclerView.Adapter adapter;
 
     // Creating List of ImageUploadInfo class.
     List<ImageFile> list = new ArrayList<>();
@@ -42,7 +40,7 @@ public class TabFragmentImages extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view =  inflater.inflate(R.layout.tab_fragment_images, container, false);
+        view = inflater.inflate(R.layout.tab_fragment_images, container, false);
         // Assign id to RecyclerView.
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_image);
 

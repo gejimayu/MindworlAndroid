@@ -13,7 +13,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.mindworld.howtosurvive.mindworld.models.TextFile;
 import com.mindworld.howtosurvive.mindworld.models.VideoFile;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class TabFragmentVideos extends Fragment {
     RecyclerView recyclerView;
 
     // Creating RecyclerView.Adapter.
-    RecyclerView.Adapter adapter ;
+    RecyclerView.Adapter adapter;
 
     // Creating List of ImageUploadInfo class.
     List<VideoFile> list = new ArrayList<>();

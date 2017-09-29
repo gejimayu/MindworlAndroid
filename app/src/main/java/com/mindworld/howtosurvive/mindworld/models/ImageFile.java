@@ -1,7 +1,5 @@
 package com.mindworld.howtosurvive.mindworld.models;
 
-import static android.R.attr.author;
-
 public class ImageFile {
     public String name;
     public String url;

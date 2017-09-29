@@ -24,12 +24,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class WriteActivity extends AppCompatActivity {
+    String filename;
     private String mUserId;
-
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
-
-    String filename;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
