@@ -33,11 +33,19 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:10.0.1'
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-auth:10.0.1'
+<<<<<<< HEAD
     compile 'com.google.firebase:firebase-database:10.0.1'
     compile 'com.android.support:recyclerview-v7:26.+'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    testCompile 'junit:junit:4.12'
+}
+
+
+apply plugin: 'com.google.gms.google-services'
+=======
     compile 'com.google.firebase:firebase-storage:10.0.1'
     testCompile 'junit:junit:4.12'
 }
 
 apply plugin: 'com.google.gms.google-services'
+>>>>>>> 3fa295bfd14eb5ac113ed785b814d0bbb9861f67

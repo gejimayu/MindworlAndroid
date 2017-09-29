@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -20,6 +21,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class WriteActivity extends AppCompatActivity {
+    private String mUserId;
+
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
 
@@ -29,6 +32,9 @@ public class WriteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_write);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // initialize User ID from Firebase Authentication
+        mUserId = getIntent().getStringExtra(LoginActivity.EXTRA_UID);
 
         // initialize Firebase Cloud Storage reference
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -41,27 +47,29 @@ public class WriteActivity extends AppCompatActivity {
         EditText memoryText = (EditText) findViewById(R.id.memory_text);
         String text = memoryText.getText().toString();
 
-        String filename = "memory.txt";
+        EditText memoryName = (EditText) findViewById(R.id.memory_name);
+        String filename = memoryName.getText().toString();
+
         FileOutputStream outputStream;
 
         try {
-            // write text to memory.txt
+            // write text to <filename>.txt
             outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
             outputStream.write(text.getBytes());
             outputStream.close();
 
-            // get memory.txt's URI
+            // get <filename>.txt's URI
             File file = new File(getFilesDir() + "/" + filename);
             Uri fileUri = Uri.fromFile(file);
-            // build memory.txt metadata
+            // build <filename>.txt metadata
             StorageMetadata metadata = new StorageMetadata.Builder()
                     .setContentType("text/plain")
                     .build();
-            // upload memory.txt to Firebase Cloud Storage
-            StorageReference memoryRef = mStorageRef.child(fileUri.getLastPathSegment());
+            // upload memory to Firebase Cloud Storage
+            StorageReference memoryRef = mStorageRef.child("user/" + mUserId + "/" + fileUri.getLastPathSegment());
             UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
-            // delete memory.txt
+            // delete <filename>.txt
             file.delete();
 
             finish();

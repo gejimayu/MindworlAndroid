@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-
     <string name="app_name">Mindworld</string>
 
     <string name="error_field_required">This field is required</string>
@@ -12,24 +9,16 @@
 
     <string name="mindworld_logo_description">Mindworld logo</string>
 
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-
-    <string name="sign_in_button">Sign in with Google</string>
-
     <string name="tab_images_label">Images</string>
     <string name="tab_texts_label">Texts</string>
     <string name="tab_videos_label">Videos</string>
 
     <string name="title_activity_login">Sign in</string>
-    <string name="title_activity_write">Write Memory</string>
+    <string name="title_activity_write">Write memory</string>
 
     <string name="write_hint">Write your memory here</string>
     <string name="write_memory_button">Send</string>
-    <string name="write_memory_hint">Write your memory here</string>
+    <string name="memory_text_hint">Write your memory here</string>
     <string name="write_save">Done</string>
+    <string name="memory_name_hint">Memory name</string>
 </resources>
