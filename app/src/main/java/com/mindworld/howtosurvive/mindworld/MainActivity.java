@@ -28,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
 
+    public static final String EXTRA_REPLY =
+            "com.example.android.twoactivities.extra.REPLY";
+
     private String mUserId;
 
     private StorageReference mStorageRef;
@@ -151,5 +154,20 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 
         startActivityForResult(intent, READ_FILE_BROWSER_REQUEST_CODE);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(item.getItemId()==R.id.sign_out){
+            String reply = "OK";
+            Intent replyIntent = new Intent();
+            replyIntent.putExtra(EXTRA_REPLY, reply);
+            setResult(RESULT_OK, replyIntent);
+            finish();
+            return true;
+        }
+        else{
+            return super.onOptionsItemSelected(item);
+        }
     }
 }
