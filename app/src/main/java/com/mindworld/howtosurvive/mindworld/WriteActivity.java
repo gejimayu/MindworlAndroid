@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -17,6 +18,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class WriteActivity extends AppCompatActivity {
+    private String mUserId;
+
     private StorageReference mStorageRef;
 
     @Override
@@ -25,6 +28,9 @@ public class WriteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_write);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // initialize User ID from Firebase Authentication
+        mUserId = getIntent().getStringExtra(LoginActivity.EXTRA_UID);
 
         // initialize Firebase Cloud Storage reference
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -53,7 +59,7 @@ public class WriteActivity extends AppCompatActivity {
                     .setContentType("text/plain")
                     .build();
             // upload memory to Firebase Cloud Storage
-            StorageReference memoryRef = mStorageRef.child(fileUri.getLastPathSegment());
+            StorageReference memoryRef = mStorageRef.child("user/" + mUserId + "/" + fileUri.getLastPathSegment());
             UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
             // delete <filename>.txt
