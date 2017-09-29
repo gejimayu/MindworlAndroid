@@ -25,9 +25,10 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private static final String TAG = "GoogleActivity";
+
     public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
 
-    private static final int SIGN_IN_REQUEST_CODE = 1001;
+    ;private static final int SIGN_IN_REQUEST_CODE = 1001;
 
     GoogleApiClient mGoogleApiClient;
     SignInButton mSignInButton;
