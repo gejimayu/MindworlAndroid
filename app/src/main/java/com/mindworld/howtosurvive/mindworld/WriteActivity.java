@@ -3,12 +3,16 @@ package com.mindworld.howtosurvive.mindworld;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -25,6 +29,8 @@ public class WriteActivity extends AppCompatActivity {
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
+
+    String filename;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +54,7 @@ public class WriteActivity extends AppCompatActivity {
         String text = memoryText.getText().toString();
 
         EditText memoryName = (EditText) findViewById(R.id.memory_name);
-        String filename = memoryName.getText().toString();
+        filename = memoryName.getText().toString();
 
         FileOutputStream outputStream;
 
@@ -71,6 +77,25 @@ public class WriteActivity extends AppCompatActivity {
 
             // delete <filename>.txt
             file.delete();
+
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Toast.makeText(getApplicationContext(), "Upload failed ", Toast.LENGTH_LONG).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // Showing toast message after done uploading.
+                    Toast.makeText(getApplicationContext(), "File Uploaded Successfully ", Toast.LENGTH_LONG).show();
+
+                    DatabaseReference db;
+
+                    TextFile txt = new TextFile(filename);
+                    db = mDatabase.child("text").push();
+                    db.setValue(txt);
+                }
+            });
 
             finish();
         } catch (Exception e) {

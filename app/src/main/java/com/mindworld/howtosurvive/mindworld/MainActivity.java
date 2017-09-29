@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                         @SuppressWarnings("VisibleForTests")
                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         // Showing toast message after done uploading.
-                        Toast.makeText(getApplicationContext(), "Image Uploaded Successfully ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "File Uploaded Successfully ", Toast.LENGTH_LONG).show();
 
                         DatabaseReference db;
                         if (mimetype.contains("image")) {
@@ -194,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
         // Filter to show only texts, images, and videos using their MIME data types.
+        String[] mimeTypes = {"text/plain", "image/*", "video/*"};
         intent.setType("*/*");
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 
