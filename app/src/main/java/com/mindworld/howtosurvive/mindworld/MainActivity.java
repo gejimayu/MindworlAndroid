@@ -33,6 +33,7 @@ import com.mindworld.howtosurvive.mindworld.models.VideoFile;
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
 
+    private static final int ACCESS_COARSE_LOCATION_REQUEST_CODE = 2003;
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
 
@@ -109,6 +110,13 @@ public class MainActivity extends AppCompatActivity {
                     getMemory();
                 }
             }
+            case ACCESS_COARSE_LOCATION_REQUEST_CODE: {
+                // permission to read external storage granted
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getCity();
+                }
+            }
         }
     }
 
@@ -128,9 +136,11 @@ public class MainActivity extends AppCompatActivity {
                 StorageReference memoryRef = mStorageRef.child("user/" + mUserId + "/" + fileUri.getLastPathSegment());
                 UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
-                //getting image name
+                // get file name
                 filename = fileUri.getLastPathSegment();
-                filelocation = "New York City";
+
+                // get file location
+                accessCity();
 
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -156,10 +166,12 @@ public class MainActivity extends AppCompatActivity {
                             db.setValue(imageUploadInfo);
                         } else if (mimetype.contains("text")) {
                             TextFile txt = new TextFile(filename, filelocation);
+                            // push into database
                             db = mDatabase.child("text").push();
                             db.setValue(txt);
                         } else if (mimetype.contains("video")) {
                             VideoFile txt = new VideoFile(filename, filelocation);
+                            // push into database
                             db = mDatabase.child("video").push();
                             db.setValue(txt);
                         }
@@ -179,8 +191,7 @@ public class MainActivity extends AppCompatActivity {
     public void uploadMemory(View view) {
         // check permission to read external storage
         if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_REQUEST_CODE);
         } else {
@@ -203,5 +214,24 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 
         startActivityForResult(intent, READ_FILE_BROWSER_REQUEST_CODE);
+    }
+
+
+    private void accessCity() {
+        // check permission to access user location
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_COARSE_LOCATION_REQUEST_CODE);
+        } else {
+            getCity();
+        }
+    }
+
+    private void getCity() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            
+        }
     }
 }
