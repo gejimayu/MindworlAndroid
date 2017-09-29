@@ -27,9 +27,10 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        TextFile UploadInfo = MainTextUploadInfoList.get(position);
+        TextFile textUploadInfo = MainTextUploadInfoList.get(position);
 
-        holder.textNameTextView.setText(UploadInfo.getName());
+        holder.textNameTextView.setText(textUploadInfo.getName());
+        holder.textLocationTextView.setText(textUploadInfo.getLocation());
     }
 
     @Override
@@ -39,11 +40,13 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textNameTextView;
+        private TextView textLocationTextView;
 
         private ViewHolder(View itemView) {
             super(itemView);
 
             textNameTextView = itemView.findViewById(R.id.item_text_name);
+            textLocationTextView = itemView.findViewById(R.id.item_text_location);
         }
     }
 }

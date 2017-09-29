@@ -24,10 +24,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class WriteActivity extends AppCompatActivity {
-    String filename;
     private String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
+
+    String filename;
+    String filelocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class WriteActivity extends AppCompatActivity {
 
         EditText memoryName = (EditText) findViewById(R.id.memory_name);
         filename = memoryName.getText().toString();
+        filelocation = "New York City";
 
         FileOutputStream outputStream;
 
@@ -88,7 +91,7 @@ public class WriteActivity extends AppCompatActivity {
 
                     DatabaseReference db;
 
-                    TextFile txt = new TextFile(filename);
+                    TextFile txt = new TextFile(filename, filelocation);
                     db = mDatabase.child("text").push();
                     db.setValue(txt);
                 }

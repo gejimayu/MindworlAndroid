@@ -32,12 +32,13 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ImageFile UploadInfo = MainImageUploadInfoList.get(position);
+        ImageFile imageUploadInfo = MainImageUploadInfoList.get(position);
 
-        holder.imageNameTextView.setText(UploadInfo.getImageName());
+        holder.imageNameTextView.setText(imageUploadInfo.getName());
+        holder.imageLocationTextView.setText(imageUploadInfo.getLocation());
 
-        //Loading image from Glide library.
-        Glide.with(context).load(UploadInfo.getImageURL()).into(holder.imageView);
+        // load image from Glide library
+        Glide.with(context).load(imageUploadInfo.getURL()).into(holder.imageView);
     }
 
     @Override
@@ -49,13 +50,15 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
 
         private ImageView imageView;
         private TextView imageNameTextView;
+        private TextView imageLocationTextView;
 
         private ViewHolder(View itemView) {
             super(itemView);
 
-            imageView = (ImageView) itemView.findViewById(R.id.item_image);
+            imageView = itemView.findViewById(R.id.item_image_image);
 
-            imageNameTextView = (TextView) itemView.findViewById(R.id.item_image_name);
+            imageNameTextView = itemView.findViewById(R.id.item_image_name);
+            imageLocationTextView = itemView.findViewById(R.id.item_image_location);
         }
     }
 }

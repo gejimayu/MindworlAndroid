@@ -12,7 +12,7 @@
         android:padding="10dp">
 
         <ImageView
-            android:id="@+id/item_image"
+            android:id="@+id/item_image_image"
             android:layout_width="50dp"
             android:layout_height="50dp" />
 
@@ -20,9 +20,22 @@
             android:id="@+id/item_image_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/item_image"
-            android:layout_toRightOf="@id/item_image"
-            android:paddingLeft="15dp" />
+            android:layout_toEndOf="@id/item_image_image"
+            android:layout_toRightOf="@id/item_image_image"
+            android:paddingEnd="15dp"
+            android:paddingLeft="15dp"
+            android:paddingStart="15dp" />
+
+        <TextView
+            android:id="@+id/item_image_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_image_name"
+            android:layout_toEndOf="@id/item_image_image"
+            android:layout_toRightOf="@id/item_image_image"
+            android:paddingEnd="15dp"
+            android:paddingLeft="15dp"
+            android:paddingStart="15dp" />
 
     </RelativeLayout>
 

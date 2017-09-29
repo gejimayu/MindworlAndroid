@@ -27,9 +27,10 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        VideoFile UploadInfo = MainVideoUploadInfoList.get(position);
+        VideoFile videoUploadInfo = MainVideoUploadInfoList.get(position);
 
-        holder.videoNameTextView.setText(UploadInfo.getName());
+        holder.videoNameTextView.setText(videoUploadInfo.getName());
+        holder.videoLocationTextView.setText(videoUploadInfo.getLocation());
     }
 
     @Override
@@ -39,11 +40,13 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView videoNameTextView;
+        private TextView videoLocationTextView;
 
         private ViewHolder(View itemView) {
             super(itemView);
 
             videoNameTextView = itemView.findViewById(R.id.item_video_name);
+            videoLocationTextView = itemView.findViewById(R.id.item_video_location);
         }
     }
 }
