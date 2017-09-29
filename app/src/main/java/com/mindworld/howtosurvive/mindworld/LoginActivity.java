@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
 
-    ;private static final int SIGN_IN_REQUEST_CODE = 1001;
+    private static final int SIGN_IN_REQUEST_CODE = 1001;
 
     GoogleApiClient mGoogleApiClient;
     SignInButton mSignInButton;
