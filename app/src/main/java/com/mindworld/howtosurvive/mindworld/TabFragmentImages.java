@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.mindworld.howtosurvive.mindworld.models.ImageFile;
 
 import java.util.ArrayList;
@@ -65,7 +68,7 @@ public class TabFragmentImages extends Fragment {
         // Adding Add Value Event Listener to databaseReference.
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot snapshot, String prevChildKey) {
+            public void onChildAdded(final DataSnapshot snapshot, String prevChildKey) {
                 ImageFile imageUploadInfo = snapshot.getValue(ImageFile.class);
 
                 list.add(imageUploadInfo);
@@ -95,6 +98,38 @@ public class TabFragmentImages extends Fragment {
 
             }
         });
+
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper
+                .SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                ImageFile toBeRemoved = list.get(viewHolder.getAdapterPosition());
+                Query query = databaseReference.orderByChild("name").equalTo(toBeRemoved.getName());
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
+                            appleSnapshot.getRef().removeValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                list.remove(viewHolder.getAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        });
+
+        touchHelper.attachToRecyclerView(recyclerView);
 
         return view;
     }
