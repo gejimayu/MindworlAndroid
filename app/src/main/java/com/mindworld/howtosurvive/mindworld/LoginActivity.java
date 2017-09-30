@@ -24,8 +24,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+    private static final String TAG = "LoginActivity";
+
     public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
-    private static final String TAG = "GoogleActivity";
+
     private static final int SIGN_IN_REQUEST_CODE = 1001;
     private static final int SIGN_OUT_REQUEST_CODE = 1002;
 
@@ -59,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        check(currentUser);
+        checkUser(currentUser);
     }
 
     @Override
@@ -73,21 +75,22 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == SIGN_IN_REQUEST_CODE) {
-            Log.d("HAHA", "SIGN_IN_SUCCESS");
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
+                Log.d(TAG, "Sign in succeed.");
+
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
                 // Google Sign In failed, update UI appropriately
-                // ...
-                Log.d("FAIL", "SIGN_IN_FAILED");
+                Log.d(TAG, "Sign in failed.");
             }
         } else if (requestCode == SIGN_OUT_REQUEST_CODE) {
-            Log.d("HAHA", "SIGN_OUT_SUCCESS");
+            Log.d(TAG, "Sign out succeed.");
+
             FirebaseAuth.getInstance().signOut();
-            check(null);
+            checkUser(null);
         }
     }
 
@@ -115,20 +118,22 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
+
                             FirebaseUser user = mAuth.getCurrentUser();
-                            check(user);
+                            checkUser(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
+
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            check(null);
+                            checkUser(null);
                         }
                     }
                 });
     }
 
-    private void check(FirebaseUser user) {
+    private void checkUser(FirebaseUser user) {
         if (user != null) {
             findViewById(R.id.sign_in).setVisibility(View.GONE);
 

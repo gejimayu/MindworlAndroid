@@ -47,32 +47,36 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
+    public static final String EXTRA_REPLY = "com.mindworld.howtosurvive.mindworld.extra.REPLY";
     public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
-    public static final String EXTRA_REPLY = "com.example.android.twoactivities.extra.REPLY";
 
     private static final int ACCESS_COARSE_LOCATION_REQUEST_CODE = 2003;
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
 
-    private static final String FIRST_TIME = "FIRST_TIME";
+    private static final String FIRST_TIMER = "FIRST_TIMER";
+
+    private static final String SHARED_PREF_FILE = "com.mindworld.howtosurvive.mindworld";
+
     String filename;
     String filelocation;
     String mimetype;
-    Sensor accelerometer;
-    Sensor magnetometer;
+
+    Sensor mAccelerometer;
+    Sensor mMagnetometer;
     float[] mGravity;
     float[] mGeomagnetic;
-    float pitch;
-    TabLayout tabLayout;
-    ViewPager viewPager;
-    View view;
+    float mPitch;
+
+    TabLayout mTabLayout;
+    ViewPager mViewPager;
+    View mView;
+
     private String mUserId;
     private StorageReference mStorageRef;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabaseRef;
     private SharedPreferences mPreferences;
-    private String sharedPrefFile = "com.mindworld.howtosurvive.mindworld";
     private SensorManager mSensorManager;
 
     @Override
@@ -82,25 +86,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         // Set the text for each tab.
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_texts_label));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_images_label));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_videos_label));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.tab_texts_label));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.tab_images_label));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.tab_videos_label));
         // Set the tabs to fill the entire layout.
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(adapter);
+                (getSupportFragmentManager(), mTabLayout.getTabCount());
+        mViewPager.setAdapter(adapter);
 
-        viewPager.addOnPageChangeListener(new
-                TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mViewPager.addOnPageChangeListener(new
+                TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+                mViewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -115,25 +119,37 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         // initialize User ID from Firebase Authentication
         mUserId = getIntent().getStringExtra(LoginActivity.EXTRA_UID);
-
-        // initialize Firebase Cloud Storage reference
+        // initialize Firebase references
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        // initialize Firebase Database
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
 
         // initialize shared preferences
-        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        mPreferences = getSharedPreferences(SHARED_PREF_FILE, MODE_PRIVATE);
         final SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+        // check if the user use the app for the first time
+        if (mPreferences.getBoolean(FIRST_TIMER, true)) {
+            Toast.makeText(getApplicationContext(), "Welcome to Mindworld.", Toast.LENGTH_LONG).show();
 
-        if (mPreferences.getBoolean(FIRST_TIME, true)) {
-            Toast.makeText(getApplicationContext(), "Welcome to Mindworld", Toast.LENGTH_LONG).show();
-
-            preferencesEditor.putBoolean(FIRST_TIME, false).commit();
+            preferencesEditor.putBoolean(FIRST_TIMER, false).apply();
         }
 
+        // initialize device sensors
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
     }
 
 
@@ -141,6 +157,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.sign_out) {
+            Intent replyIntent = new Intent();
+            replyIntent.putExtra(EXTRA_REPLY, "OK");
+            setResult(RESULT_OK, replyIntent);
+
+            finish();
+
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -168,11 +199,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == READ_FILE_BROWSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 // get selected file's URI
                 Uri fileUri = data.getData();
-                // build file metadata
+                // build file's metadata
                 mimetype = getContentResolver().getType(fileUri);
                 StorageMetadata metadata = new StorageMetadata.Builder()
                         .setContentType(mimetype)
@@ -207,17 +239,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             ImageFile imageUploadInfo = new ImageFile(filename, filelocation,
                                     taskSnapshot.getDownloadUrl().toString());
                             //push into database
-                            db = mDatabase.child("image").push();
+                            db = mDatabaseRef.child("image").push();
                             db.setValue(imageUploadInfo);
                         } else if (mimetype.contains("text")) {
                             TextFile txt = new TextFile(filename, filelocation);
                             // push into database
-                            db = mDatabase.child("text").push();
+                            db = mDatabaseRef.child("text").push();
                             db.setValue(txt);
                         } else if (mimetype.contains("video")) {
                             VideoFile txt = new VideoFile(filename, filelocation);
                             // push into database
-                            db = mDatabase.child("video").push();
+                            db = mDatabaseRef.child("video").push();
                             db.setValue(txt);
                         }
                     }
@@ -227,18 +259,37 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.sign_out) {
-            Intent replyIntent = new Intent();
-            replyIntent.putExtra(EXTRA_REPLY, "OK");
-            setResult(RESULT_OK, replyIntent);
-
-            finish();
-
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            mGravity = sensorEvent.values;
         }
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            mGeomagnetic = sensorEvent.values;
+        }
+        if (mGravity != null && mGeomagnetic != null) {
+            float R[] = new float[9];
+            float I[] = new float[9];
+
+            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+            if (success) {
+                float orientation[] = new float[3];
+                SensorManager.getOrientation(R, orientation);
+
+                mPitch = orientation[1]; // orientation contains: azimut, pitch and roll
+                Float temp = new Float(mPitch);
+
+                Log.d("Sensor", temp.toString());
+
+                if (mPitch > 0.3) {
+                    writeMemory(mView);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 
     public void writeMemory(View view) {
@@ -342,46 +393,5 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
-        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mSensorManager.unregisterListener(this);
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-            mGravity = sensorEvent.values;
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-            mGeomagnetic = sensorEvent.values;
-        if (mGravity != null && mGeomagnetic != null) {
-            float R[] = new float[9];
-            float I[] = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
-            if (success) {
-                float orientation[] = new float[3];
-                SensorManager.getOrientation(R, orientation);
-                pitch = orientation[1]; // orientation contains: azimut, pitch and roll
-                Float temp = new Float(pitch);
-                Log.d("SENSOR", temp.toString());
-                if (pitch > 0.3) {
-                    writeMemory(view);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
     }
 }

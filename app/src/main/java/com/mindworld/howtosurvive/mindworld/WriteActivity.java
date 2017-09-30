@@ -38,8 +38,10 @@ import java.util.Locale;
 
 public class WriteActivity extends AppCompatActivity {
     private static final int ACCESS_COARSE_LOCATION_REQUEST_CODE = 2003;
-    String filename;
-    String filelocation;
+
+    String mFilename;
+    String mFilelocation;
+
     private String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
@@ -53,11 +55,8 @@ public class WriteActivity extends AppCompatActivity {
 
         // initialize User ID from Firebase Authentication
         mUserId = getIntent().getStringExtra(LoginActivity.EXTRA_UID);
-
-        // initialize Firebase Cloud Storage reference
+        // initialize Firebase references
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        //initialize Firebase Database Reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
@@ -81,21 +80,21 @@ public class WriteActivity extends AppCompatActivity {
         String text = memoryText.getText().toString();
 
         EditText memoryName = (EditText) findViewById(R.id.memory_name);
-        filename = memoryName.getText().toString();
+        mFilename = memoryName.getText().toString();
         accessCity();
 
         FileOutputStream outputStream;
 
         try {
-            // write text to <filename>.txt
-            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            // write text to <mFilename>.txt
+            outputStream = openFileOutput(mFilename, Context.MODE_PRIVATE);
             outputStream.write(text.getBytes());
             outputStream.close();
 
-            // get <filename>.txt's URI
-            File file = new File(getFilesDir() + "/" + filename);
+            // get <mFilename>.txt's URI
+            File file = new File(getFilesDir() + "/" + mFilename);
             Uri fileUri = Uri.fromFile(file);
-            // build <filename>.txt metadata
+            // build <mFilename>.txt's metadata
             StorageMetadata metadata = new StorageMetadata.Builder()
                     .setContentType("text/plain")
                     .build();
@@ -103,7 +102,7 @@ public class WriteActivity extends AppCompatActivity {
             StorageReference memoryRef = mStorageRef.child("user/" + mUserId + "/" + fileUri.getLastPathSegment());
             UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
-            // delete <filename>.txt
+            // delete <mFilename>.txt
             file.delete();
 
             uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -119,7 +118,7 @@ public class WriteActivity extends AppCompatActivity {
 
                     DatabaseReference db;
 
-                    TextFile txt = new TextFile(filename, filelocation);
+                    TextFile txt = new TextFile(mFilename, mFilelocation);
                     db = mDatabase.child("text").push();
                     db.setValue(txt);
                 }
@@ -192,8 +191,8 @@ public class WriteActivity extends AppCompatActivity {
                 List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
 
                 if (addresses.size() > 0) {
-                    // obtain all information from addresses.get(0)
-                    filelocation = addresses.get(0).getLocality();
+                    // Obtain all information from addresses.get(0)
+                    mFilelocation = addresses.get(0).getLocality();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

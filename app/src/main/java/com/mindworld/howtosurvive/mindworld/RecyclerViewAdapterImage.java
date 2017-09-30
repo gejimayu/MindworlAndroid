@@ -47,7 +47,6 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-
         private ImageView imageView;
         private TextView imageNameTextView;
         private TextView imageLocationTextView;

@@ -38,7 +38,5 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mindworld.howtosurvive.mindworld.MainActivity" />
         </activity>
-
     </application>
-
 </manifest>
