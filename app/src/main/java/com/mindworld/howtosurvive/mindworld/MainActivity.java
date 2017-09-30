@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
 
+    private static final String FIRST_TIME = "FIRST_TIME";
+
     private String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
@@ -109,6 +111,13 @@ public class MainActivity extends AppCompatActivity {
 
         // initialize shared preferences
         mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        final SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+
+        if (mPreferences.getBoolean(FIRST_TIME, true)) {
+            Toast.makeText(getApplicationContext(), "Welcome to Mindworld", Toast.LENGTH_LONG).show();
+
+            preferencesEditor.putBoolean(FIRST_TIME, false).commit();
+        }
     }
 
     @Override
@@ -208,11 +217,6 @@ public class MainActivity extends AppCompatActivity {
             setResult(RESULT_OK, replyIntent);
 
             finish();
-
-            return true;
-        } else if (item.getItemId() == R.id.settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
 
             return true;
         } else {

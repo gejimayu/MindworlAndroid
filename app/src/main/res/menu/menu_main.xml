@@ -4,11 +4,6 @@
     tools:context="com.mindworld.howtosurvive.mindworld.MainActivity">
 
     <item
-        android:id="@+id/settings"
-        android:orderInCategory="20"
-        android:title="@string/menu_settings"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/sign_out"
         android:orderInCategory="30"
         android:title="@string/menu_sign_out"
