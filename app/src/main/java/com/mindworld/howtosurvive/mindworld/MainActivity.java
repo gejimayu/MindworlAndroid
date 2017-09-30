@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
 
         // initialize User ID from Firebase Authentication
-        mUserId = getIntent().getStringExtra(LoginActivity.EXTRA_UID);
+        mUserId = getIntent().getStringExtra(LoginActivity.EXTRA_USER_ID);
         // initialize Firebase references
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
@@ -149,9 +149,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.sign_out) {
-            Intent replyIntent = new Intent();
-            replyIntent.putExtra(EXTRA_REPLY, "OK");
-            setResult(RESULT_OK, replyIntent);
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_REPLY, "OK");
+            setResult(RESULT_OK, intent);
 
             finish();
 

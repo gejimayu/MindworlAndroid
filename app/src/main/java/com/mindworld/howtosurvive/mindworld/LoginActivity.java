@@ -26,7 +26,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private static final String TAG = "LoginActivity";
 
-    public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
+    public static final String EXTRA_USER_ID = "com.mindworld.howtosurvive.mindworld.extra.USER_ID";
 
     private static final int SIGN_IN_REQUEST_CODE = 1001;
     private static final int SIGN_OUT_REQUEST_CODE = 1002;
@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             findViewById(R.id.sign_in).setVisibility(View.GONE);
 
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(EXTRA_UID, user.getUid());
+            intent.putExtra(EXTRA_USER_ID, user.getUid());
 
             startActivityForResult(intent, SIGN_OUT_REQUEST_CODE);
         } else {
