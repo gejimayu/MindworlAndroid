@@ -2,7 +2,9 @@ package com.mindworld.howtosurvive.mindworld;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -46,7 +48,7 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
         return MainImageUploadInfoList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
         private ImageView imageView;
         private TextView imageNameTextView;
@@ -56,9 +58,16 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
             super(itemView);
 
             imageView = itemView.findViewById(R.id.item_image_image);
-
             imageNameTextView = itemView.findViewById(R.id.item_image_name);
             imageLocationTextView = itemView.findViewById(R.id.item_image_location);
+
+            itemView.setOnCreateContextMenuListener(this);
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            MenuInflater inflater = new MenuInflater(context);
+            inflater.inflate(R.menu.context_menu, contextMenu);
         }
     }
 }
