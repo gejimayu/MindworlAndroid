@@ -24,4 +24,6 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_sign_out">Sign out</string>
     <string name="night_mode_switch">Night Mode</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="larger_font_switch_description">Larger font size</string>
 </resources>

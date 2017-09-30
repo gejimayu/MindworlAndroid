@@ -3,6 +3,7 @@ package com.mindworld.howtosurvive.mindworld;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
@@ -53,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
 
+    private SharedPreferences mPreferences;
+    private String sharedPrefFile = "com.mindworld.howtosurvive.mindworld";
+
     String filename;
     String filelocation;
     String mimetype;
@@ -102,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference();
         // initialize Firebase Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // initialize shared preferences
+        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
     }
 
     @Override
@@ -196,11 +203,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.sign_out) {
-            String reply = "OK";
             Intent replyIntent = new Intent();
-            replyIntent.putExtra(EXTRA_REPLY, reply);
+            replyIntent.putExtra(EXTRA_REPLY, "OK");
             setResult(RESULT_OK, replyIntent);
+
             finish();
+
+            return true;
+        } else if (item.getItemId() == R.id.settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+
             return true;
         } else {
             return super.onOptionsItemSelected(item);
