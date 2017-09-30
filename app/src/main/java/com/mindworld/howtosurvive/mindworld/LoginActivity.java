@@ -24,10 +24,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
-    private static final String TAG = "GoogleActivity";
-
     public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
-
+    private static final String TAG = "GoogleActivity";
     private static final int SIGN_IN_REQUEST_CODE = 1001;
     private static final int SIGN_OUT_REQUEST_CODE = 1002;
 
@@ -86,8 +84,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 // ...
                 Log.d("FAIL", "SIGN_IN_FAILED");
             }
-        }
-        else if (requestCode == SIGN_OUT_REQUEST_CODE){
+        } else if (requestCode == SIGN_OUT_REQUEST_CODE) {
             Log.d("HAHA", "SIGN_OUT_SUCCESS");
             FirebaseAuth.getInstance().signOut();
             check(null);

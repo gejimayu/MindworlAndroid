@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -23,13 +24,10 @@ import com.google.firebase.storage.UploadTask;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
-
-    private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
-    private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
-
     public static final String EXTRA_REPLY =
             "com.example.android.twoactivities.extra.REPLY";
-
+    private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
+    private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
     private String mUserId;
 
     private StorageReference mStorageRef;
@@ -119,6 +117,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.sign_out) {
+            String reply = "OK";
+            Intent replyIntent = new Intent();
+            replyIntent.putExtra(EXTRA_REPLY, reply);
+            setResult(RESULT_OK, replyIntent);
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
     public void writeMemory(View view) {
         Intent intent = new Intent(this, WriteActivity.class);
         intent.putExtra(EXTRA_UID, mUserId);
@@ -153,20 +165,5 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 
         startActivityForResult(intent, READ_FILE_BROWSER_REQUEST_CODE);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        if(item.getItemId()==R.id.sign_out){
-            String reply = "OK";
-            Intent replyIntent = new Intent();
-            replyIntent.putExtra(EXTRA_REPLY, reply);
-            setResult(RESULT_OK, replyIntent);
-            finish();
-            return true;
-        }
-        else{
-            return super.onOptionsItemSelected(item);
-        }
     }
 }
