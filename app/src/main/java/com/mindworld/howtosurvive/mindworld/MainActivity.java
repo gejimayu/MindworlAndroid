@@ -171,18 +171,22 @@ public class MainActivity extends AppCompatActivity {
                         DatabaseReference db;
                         if (mimetype.contains("image")) {
                             @SuppressWarnings("VisibleForTests")
-                            ImageFile imageUploadInfo = new ImageFile(filename, filelocation,
+                            ImageFile imageUploadInfo = new ImageFile(filename, filelocation, fileUri,
                                     taskSnapshot.getDownloadUrl().toString());
                             //push into database
                             db = mDatabase.child("image").push();
                             db.setValue(imageUploadInfo);
                         } else if (mimetype.contains("text")) {
-                            TextFile txt = new TextFile(filename, filelocation);
+                            @SuppressWarnings("VisibleForTests")
+                            TextFile txt = new TextFile(filename, filelocation, fileUri,
+                                    taskSnapshot.getDownloadUrl().toString());
                             // push into database
                             db = mDatabase.child("text").push();
                             db.setValue(txt);
                         } else if (mimetype.contains("video")) {
-                            VideoFile txt = new VideoFile(filename, filelocation);
+                            @SuppressWarnings("VisibleForTests")
+                            VideoFile txt = new VideoFile(filename, filelocation, fileUri,
+                                    taskSnapshot.getDownloadUrl().toString());
                             // push into database
                             db = mDatabase.child("video").push();
                             db.setValue(txt);

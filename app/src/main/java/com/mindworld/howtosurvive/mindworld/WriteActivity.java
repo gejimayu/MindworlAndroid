@@ -90,8 +90,8 @@ public class WriteActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "File Uploaded Successfully ", Toast.LENGTH_LONG).show();
 
                     DatabaseReference db;
-
-                    TextFile txt = new TextFile(filename, filelocation);
+                    @SuppressWarnings("VisibleForTests")
+                    TextFile txt = new TextFile(filename, filelocation, null, taskSnapshot.getDownloadUrl().toString());
                     db = mDatabase.child("text").push();
                     db.setValue(txt);
                 }
