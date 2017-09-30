@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -47,7 +48,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener{
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
     public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
     public static final String EXTRA_REPLY = "com.example.android.twoactivities.extra.REPLY";
 
@@ -55,9 +56,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
 
+    private static final String FIRST_TIME = "FIRST_TIME";
+
     private String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
+
+    private SharedPreferences mPreferences;
+    private String sharedPrefFile = "com.mindworld.howtosurvive.mindworld";
 
     String filename;
     String filelocation;
@@ -120,6 +126,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mStorageRef = FirebaseStorage.getInstance().getReference();
         // initialize Firebase Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // initialize shared preferences
+        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        final SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+
+        if (mPreferences.getBoolean(FIRST_TIME, true)) {
+            Toast.makeText(getApplicationContext(), "Welcome to Mindworld", Toast.LENGTH_LONG).show();
+
+            preferencesEditor.putBoolean(FIRST_TIME, false).commit();
+        }
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -219,11 +235,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.sign_out) {
-            String reply = "OK";
             Intent replyIntent = new Intent();
-            replyIntent.putExtra(EXTRA_REPLY, reply);
+            replyIntent.putExtra(EXTRA_REPLY, "OK");
             setResult(RESULT_OK, replyIntent);
+
             finish();
+
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -334,14 +351,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
     }
@@ -362,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 pitch = orientation[1]; // orientation contains: azimut, pitch and roll
                 Float temp = new Float(pitch);
                 Log.d("SENSOR", temp.toString());
-                if(pitch > 0.3){
+                if (pitch > 0.3) {
                     writeMemory(view);
                 }
             }

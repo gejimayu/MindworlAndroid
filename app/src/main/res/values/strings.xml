@@ -2,10 +2,10 @@
 <resources>
     <string name="app_name">Mindworld</string>
 
-    <string name="error_field_required">This field is required</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
+    <string name="memory_name_hint">Memory name</string>
+    <string name="memory_text_hint">Write your memory here</string>
+
+    <string name="menu_sign_out">Sign out</string>
 
     <string name="mindworld_logo_description">Mindworld logo</string>
 
@@ -18,7 +18,5 @@
 
     <string name="write_hint">Write your memory here</string>
     <string name="write_memory_button">Send</string>
-    <string name="memory_text_hint">Write your memory here</string>
     <string name="write_save">Done</string>
-    <string name="memory_name_hint">Memory name</string>
 </resources>
