@@ -21,14 +21,14 @@ public class MindMemory {
     private String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
-    private String mFilelocation;
+    private String mLocality;
 
-    public MindMemory(Context context, String userId, StorageReference storageRef, DatabaseReference databaseRef, String filelocation) {
+    public MindMemory(Context context, String userId, StorageReference storageRef, DatabaseReference databaseRef, String locality) {
         mContext = context;
         mUserId = userId;
         mStorageRef = storageRef;
         mDatabaseRef = databaseRef;
-        mFilelocation = filelocation;
+        mLocality = locality;
     }
 
 
@@ -78,18 +78,18 @@ public class MindMemory {
                 DatabaseReference databaseReference;
                 if (mimetype.contains("image")) {
                     @SuppressWarnings("VisibleForTests")
-                    ImageFile imageUploadInfo = new ImageFile(filename, mFilelocation,
+                    ImageFile imageUploadInfo = new ImageFile(filename, mLocality,
                             taskSnapshot.getDownloadUrl().toString());
                     //push into database
                     databaseReference = mDatabaseRef.child("image").push();
                     databaseReference.setValue(imageUploadInfo);
                 } else if (mimetype.contains("text")) {
-                    TextFile txt = new TextFile(filename, mFilelocation);
+                    TextFile txt = new TextFile(filename, mLocality);
                     // push into database
                     databaseReference = mDatabaseRef.child("text").push();
                     databaseReference.setValue(txt);
                 } else if (mimetype.contains("video")) {
-                    VideoFile txt = new VideoFile(filename, mFilelocation);
+                    VideoFile txt = new VideoFile(filename, mLocality);
                     // push into database
                     databaseReference = mDatabaseRef.child("video").push();
                     databaseReference.setValue(txt);

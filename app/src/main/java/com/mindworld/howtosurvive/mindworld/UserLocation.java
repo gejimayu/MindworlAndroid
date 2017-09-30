@@ -17,15 +17,15 @@ import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-public class UserCity {
+public class UserLocation {
     private Context mContext;
-    private String mFilelocation;
+    private String mLocality;
 
-    public UserCity(Context context) {
+    public UserLocation(Context context) {
         mContext = context;
     }
 
-    public void getCity() {
+    public void findLocation() {
         if (ContextCompat.checkSelfPermission(mContext,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             // Getting LocationManager object from System Service LOCATION_SERVICE
@@ -41,14 +41,14 @@ public class UserCity {
             Location location = locationManager.getLastKnownLocation(provider);
 
             if (location != null) {
-                getUserGeoInfo(location.getLatitude(), location.getLongitude());
+                findCity(location.getLatitude(), location.getLongitude());
             }
 
             // Define a listener that responds to location updates
             LocationListener locationListener = new LocationListener() {
                 public void onLocationChanged(Location location) {
                     // Called when a new location is found by the network location provider.
-                    getUserGeoInfo(location.getLatitude(), location.getLongitude());
+                    findCity(location.getLatitude(), location.getLongitude());
                 }
 
                 public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -66,7 +66,7 @@ public class UserCity {
         }
     }
 
-    private void getUserGeoInfo(double latitude, double longitude) {
+    private void findCity(double latitude, double longitude) {
         Geocoder geoCoder = new Geocoder(mContext, Locale.getDefault());
         if (Geocoder.isPresent()) {
             try {
@@ -74,7 +74,7 @@ public class UserCity {
 
                 if (addresses.size() > 0) {
                     // obtain all information from addresses.get(0)
-                    mFilelocation = addresses.get(0).getLocality();
+                    mLocality = addresses.get(0).getLocality();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -82,7 +82,7 @@ public class UserCity {
         }
     }
 
-    public String getFilelocation() {
-        return mFilelocation;
+    public String getLocality() {
+        return mLocality;
     }
 }

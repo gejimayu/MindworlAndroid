@@ -31,7 +31,8 @@ import com.google.firebase.storage.StorageReference;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     public static final String EXTRA_REPLY = "com.mindworld.howtosurvive.mindworld.extra.REPLY";
-    public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
+    public static final String EXTRA_USER_ID = "com.mindworld.howtosurvive.mindworld.extra.USER_ID";
+    public static final String EXTRA_USER_LOCALITY = "com.mindworld.howtosurvive.mindworld.extra.USER_LOCALITY";
 
     private static final int ACCESS_COARSE_LOCATION_PERMISSION_CODE = 2003;
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SharedPreferences mPreferences;
     private SensorManager mSensorManager;
 
-    private UserCity mUserCity;
+    private UserLocation mUserLocation;
     private MindMemory mMindMemory;
 
     @Override
@@ -117,12 +118,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-        // initialize UserCity
-        mUserCity = new UserCity(this);
-        findUserCity();
+        // initialize UserLocation
+        mUserLocation = new UserLocation(this);
+        findUserLocality();
 
         // initialize MindMemory
-        mMindMemory = new MindMemory(this, mUserId, mStorageRef, mDatabaseRef, mUserCity.getFilelocation());
+        mMindMemory = new MindMemory(this, mUserId, mStorageRef, mDatabaseRef, mUserLocation.getLocality());
     }
 
     @Override
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 // permission to read external storage granted
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mUserCity.getCity();
+                    mUserLocation.findLocation();
                 }
             }
         }
@@ -229,12 +230,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void writeMemory(View view) {
         Intent intent = new Intent(this, WriteActivity.class);
-        intent.putExtra(EXTRA_UID, mUserId);
+        intent.putExtra(EXTRA_USER_ID, mUserId);
+        intent.putExtra(EXTRA_USER_LOCALITY, mUserLocation.getLocality());
 
         startActivity(intent);
     }
 
-    public void uploadMemory(View view) {
+    public void addMemory(View view) {
         // check permission to read external storage
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -245,14 +247,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    public void findUserCity() {
+    public void findUserLocality() {
         // check permission to access user location
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_COARSE_LOCATION_PERMISSION_CODE);
         } else {
-            mUserCity.getCity();
+            mUserLocation.findLocation();
         }
     }
 }
