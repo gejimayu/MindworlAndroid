@@ -13,5 +13,5 @@
         android:orderInCategory="30"
         android:title="Sign out"
         app:showAsAction="never" />
-    
+
 </menu>

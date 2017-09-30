@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
     private static final String TAG = "GoogleActivity";
     private static final int SIGN_IN_REQUEST_CODE = 1001;
+    private static final int SIGN_OUT_REQUEST_CODE = 1002;
 
     GoogleApiClient mGoogleApiClient;
     SignInButton mSignInButton;
@@ -72,6 +73,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == SIGN_IN_REQUEST_CODE) {
+            Log.d("HAHA", "SIGN_IN_SUCCESS");
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
@@ -80,7 +82,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
+                Log.d("FAIL", "SIGN_IN_FAILED");
             }
+        } else if (requestCode == SIGN_OUT_REQUEST_CODE) {
+            Log.d("HAHA", "SIGN_OUT_SUCCESS");
+            FirebaseAuth.getInstance().signOut();
+            check(null);
         }
     }
 
@@ -91,6 +98,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.clearDefaultAccountAndReconnect();
+        }
         startActivityForResult(signInIntent, SIGN_IN_REQUEST_CODE);
     }
 
@@ -125,7 +135,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(EXTRA_UID, user.getUid());
 
-            startActivity(intent);
+            startActivityForResult(intent, SIGN_OUT_REQUEST_CODE);
         } else {
             findViewById(R.id.sign_in).setVisibility(View.VISIBLE);
         }

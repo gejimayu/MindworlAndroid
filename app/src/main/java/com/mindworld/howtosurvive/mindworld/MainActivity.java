@@ -19,8 +19,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -43,6 +43,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
+    public static final String EXTRA_REPLY = "com.example.android.twoactivities.extra.REPLY";
 
     private static final int ACCESS_COARSE_LOCATION_REQUEST_CODE = 2003;
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
@@ -189,6 +190,20 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.sign_out) {
+            String reply = "OK";
+            Intent replyIntent = new Intent();
+            replyIntent.putExtra(EXTRA_REPLY, reply);
+            setResult(RESULT_OK, replyIntent);
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
