@@ -254,7 +254,6 @@ public class MainActivity extends AppCompatActivity {
             Location location = locationManager.getLastKnownLocation(provider);
 
             if (location != null) {
-                Log.d("LatLon", location.getLatitude() + "," + location.getLongitude());
                 getUserGeoInfo(location.getLatitude(), location.getLongitude());
             }
 
@@ -262,7 +261,6 @@ public class MainActivity extends AppCompatActivity {
             LocationListener locationListener = new LocationListener() {
                 public void onLocationChanged(Location location) {
                     // Called when a new location is found by the network location provider.
-                    Log.d("Lat-Lng", location.getLatitude() + "," + location.getLongitude());
                     getUserGeoInfo(location.getLatitude(), location.getLongitude());
                 }
 
