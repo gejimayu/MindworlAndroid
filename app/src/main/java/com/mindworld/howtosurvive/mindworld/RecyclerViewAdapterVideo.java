@@ -1,7 +1,10 @@
 package com.mindworld.howtosurvive.mindworld;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -9,7 +12,9 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.mindworld.howtosurvive.mindworld.models.ImageFile;
 import com.mindworld.howtosurvive.mindworld.models.VideoFile;
 
 import java.util.List;
@@ -43,7 +48,7 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
         return MainVideoUploadInfoList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         private TextView videoNameTextView;
         private TextView videoLocationTextView;
 
@@ -52,6 +57,32 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
 
             videoNameTextView = itemView.findViewById(R.id.item_video_name);
             videoLocationTextView = itemView.findViewById(R.id.item_video_location);
+
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
+        }
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(context, "clicked ", Toast.LENGTH_LONG).show();
+            VideoFile currentFile = MainVideoUploadInfoList.get(getAdapterPosition());
+            Uri path = currentFile.getUri();
+            if (path != null) {
+                Intent openIntent = new Intent(Intent.ACTION_VIEW);
+                openIntent.setDataAndType(path, "video/*");
+                // Verify that the intent will resolve to an activity
+                try {
+                    context.startActivity(openIntent);
+                }
+                catch (ActivityNotFoundException e) {
+                }
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            Toast.makeText(context, "long clicked ", Toast.LENGTH_LONG).show();
+            VideoFile currentFile = MainVideoUploadInfoList.get(getAdapterPosition());
+            return true;
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.mindworld.howtosurvive.mindworld;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -13,10 +14,17 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mindworld.howtosurvive.mindworld.models.TextFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAdapterText.ViewHolder> {
@@ -64,9 +72,11 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
 
         @Override
         public void onClick(View view) {
+            //Toast.makeText(context, "clicked ", Toast.LENGTH_LONG).show();
             TextFile currentFile = MainTextUploadInfoList.get(getAdapterPosition());
             Uri path = currentFile.getUri();
             if (path != null) {
+                Toast.makeText(context, "opening", Toast.LENGTH_LONG).show();
                 Intent openIntent = new Intent(Intent.ACTION_VIEW);
                 openIntent.setDataAndType(path, "text/plain");
                 // Verify that the intent will resolve to an activity
@@ -76,10 +86,32 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
                 catch (ActivityNotFoundException e) {
                 }
             }
+            else {
+                if (currentFile.getUrl() == null)
+                    Toast.makeText(context,"null", Toast.LENGTH_LONG).show();
+                downloadFile(currentFile.getUrl());
+            }
+        }
+
+        public void downloadFile(String fileUrl) {
+            try {
+                String servicestring = Context.DOWNLOAD_SERVICE;
+                DownloadManager downloadmanager;
+                downloadmanager = (DownloadManager) context.getSystemService(servicestring);
+                Uri uri = Uri.parse(fileUrl);
+                DownloadManager.Request request = new DownloadManager.Request(uri);
+                request.setDestinationInExternalFilesDir(context,
+                        Environment.DIRECTORY_DOWNLOADS,"test.txt");
+                downloadmanager.enqueue(request);
+            }
+            catch (Exception e) {
+                Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
+            }
         }
 
         @Override
         public boolean onLongClick(View view) {
+            Toast.makeText(context, "long clicked ", Toast.LENGTH_LONG).show();
             TextFile currentFile = MainTextUploadInfoList.get(getAdapterPosition());
             return true;
         }
