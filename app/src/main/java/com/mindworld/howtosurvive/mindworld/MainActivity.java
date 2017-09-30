@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -46,13 +47,11 @@ public class MainActivity extends AppCompatActivity {
     String filename;
     String filelocation;
     String mimetype;
-    Context context;
+    Uri fileUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        context = MainActivity.this;
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -132,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == READ_FILE_BROWSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 // get selected file's URI
-                Uri fileUri = data.getData();
+                fileUri = data.getData();
                 // build file metadata
                 mimetype = getContentResolver().getType(fileUri);
                 StorageMetadata metadata = new StorageMetadata.Builder()
@@ -239,21 +238,5 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             
         }
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.context_open:
-                Toast.makeText(context,"You have clicked Open" ,Toast.LENGTH_LONG).show();
-                break;
-            case R.id.context_delete:
-                Toast.makeText(context,"You have clicked Delete",Toast.LENGTH_LONG).show();
-                break;
-            case R.id.context_download:
-                Toast.makeText(context,"You have clicked Download",Toast.LENGTH_LONG).show();
-                break;
-        }
-        return super.onContextItemSelected(item);
     }
 }

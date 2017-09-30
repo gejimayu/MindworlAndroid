@@ -2,7 +2,9 @@ package com.mindworld.howtosurvive.mindworld;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -13,9 +15,11 @@ import java.util.List;
 
 public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAdapterText.ViewHolder> {
     private List<TextFile> MainTextUploadInfoList;
+    private Context context;
 
     public RecyclerViewAdapterText(Context context, List<TextFile> textFileList) {
         this.MainTextUploadInfoList = textFileList;
+        this.context = context;
     }
 
     @Override
@@ -38,7 +42,7 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
         return MainTextUploadInfoList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         private TextView textNameTextView;
         private TextView textLocationTextView;
 
@@ -47,6 +51,13 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
 
             textNameTextView = itemView.findViewById(R.id.item_text_name);
             textLocationTextView = itemView.findViewById(R.id.item_text_location);
+
+            itemView.setOnCreateContextMenuListener(this);
+        }
+        @Override
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            MenuInflater inflater = new MenuInflater(context);
+            inflater.inflate(R.menu.context_menu, contextMenu);
         }
     }
 }

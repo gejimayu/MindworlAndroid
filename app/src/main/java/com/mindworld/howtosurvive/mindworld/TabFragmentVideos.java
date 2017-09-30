@@ -1,12 +1,16 @@
 package com.mindworld.howtosurvive.mindworld;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +25,8 @@ import java.util.List;
 public class TabFragmentVideos extends Fragment {
     // Main Activity Context
     View view;
+    // apps context
+    Context context;
     // Creating DatabaseReference.
     DatabaseReference databaseReference;
 
@@ -43,6 +49,8 @@ public class TabFragmentVideos extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.tab_fragment_videos, container, false);
+
+        context = view.getContext();
         // Assign id to RecyclerView.
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_video);
 
@@ -92,5 +100,21 @@ public class TabFragmentVideos extends Fragment {
         });
         // Inflate the layout for this fragment
         return view;
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.context_open:
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                Toast.makeText(context,"You have clicked Open",Toast.LENGTH_LONG).show();
+                break;
+            case R.id.context_delete:
+                Toast.makeText(context,"You have clicked Delete",Toast.LENGTH_LONG).show();
+                break;
+            case R.id.context_download:
+                Toast.makeText(context,"You have clicked Download",Toast.LENGTH_LONG).show();
+                break;
+        }
+        return super.onContextItemSelected(item);
     }
 }
