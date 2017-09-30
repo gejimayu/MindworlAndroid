@@ -57,29 +57,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
 
     private static final String FIRST_TIME = "FIRST_TIME";
-
-    private String mUserId;
-    private StorageReference mStorageRef;
-    private DatabaseReference mDatabase;
-
-    private SharedPreferences mPreferences;
-    private String sharedPrefFile = "com.mindworld.howtosurvive.mindworld";
-
     String filename;
     String filelocation;
     String mimetype;
-
-    private SensorManager mSensorManager;
     Sensor accelerometer;
     Sensor magnetometer;
     float[] mGravity;
     float[] mGeomagnetic;
     float pitch;
-
     TabLayout tabLayout;
     ViewPager viewPager;
-
     View view;
+    private String mUserId;
+    private StorageReference mStorageRef;
+    private DatabaseReference mDatabase;
+    private SharedPreferences mPreferences;
+    private String sharedPrefFile = "com.mindworld.howtosurvive.mindworld";
+    private SensorManager mSensorManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

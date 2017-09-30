@@ -38,13 +38,11 @@ import java.util.Locale;
 
 public class WriteActivity extends AppCompatActivity {
     private static final int ACCESS_COARSE_LOCATION_REQUEST_CODE = 2003;
-
+    String filename;
+    String filelocation;
     private String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
-
-    String filename;
-    String filelocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
