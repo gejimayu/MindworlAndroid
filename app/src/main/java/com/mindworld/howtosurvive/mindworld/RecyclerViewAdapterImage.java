@@ -1,5 +1,6 @@
 package com.mindworld.howtosurvive.mindworld;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -21,7 +22,6 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
 
     public RecyclerViewAdapterImage(Context context, List<ImageFile> imageFileList) {
         this.MainImageUploadInfoList = imageFileList;
-
         this.context = context;
     }
 
@@ -38,7 +38,7 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
 
         holder.imageNameTextView.setText(imageUploadInfo.getName());
         holder.imageLocationTextView.setText(imageUploadInfo.getLocation());
-
+        holder.imageNameTextView.setTag(position);
         // load image from Glide library
         Glide.with(context).load(imageUploadInfo.getURL()).into(holder.imageView);
     }
@@ -48,7 +48,7 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
         return MainImageUploadInfoList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageView;
         private TextView imageNameTextView;
@@ -60,14 +60,6 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
             imageView = itemView.findViewById(R.id.item_image_image);
             imageNameTextView = itemView.findViewById(R.id.item_image_name);
             imageLocationTextView = itemView.findViewById(R.id.item_image_location);
-
-            itemView.setOnCreateContextMenuListener(this);
-        }
-
-        @Override
-        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-            MenuInflater inflater = new MenuInflater(context);
-            inflater.inflate(R.menu.context_menu, contextMenu);
         }
     }
 }

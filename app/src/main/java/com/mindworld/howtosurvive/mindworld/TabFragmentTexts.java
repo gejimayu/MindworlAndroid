@@ -101,20 +101,4 @@ public class TabFragmentTexts extends Fragment {
         // Inflate the layout for this fragment
         return view;
     }
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.context_open:
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                Toast.makeText(context,"You have clicked Open",Toast.LENGTH_LONG).show();
-                break;
-            case R.id.context_delete:
-                Toast.makeText(context,"You have clicked Delete",Toast.LENGTH_LONG).show();
-                break;
-            case R.id.context_download:
-                Toast.makeText(context,"You have clicked Download",Toast.LENGTH_LONG).show();
-                break;
-        }
-        return super.onContextItemSelected(item);
-    }
 }
