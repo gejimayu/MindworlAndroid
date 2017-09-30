@@ -2,8 +2,13 @@ package com.mindworld.howtosurvive.mindworld;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -19,6 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,7 +47,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
     public static final String EXTRA_UID = "com.mindworld.howtosurvive.mindworld.extra.UID";
     public static final String EXTRA_REPLY = "com.example.android.twoactivities.extra.REPLY";
 
@@ -57,6 +63,18 @@ public class MainActivity extends AppCompatActivity {
     String filelocation;
     String mimetype;
 
+    private SensorManager mSensorManager;
+    Sensor accelerometer;
+    Sensor magnetometer;
+    float[] mGravity;
+    float[] mGeomagnetic;
+    float pitch;
+
+    TabLayout tabLayout;
+    ViewPager viewPager;
+
+    View view;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         // Set the text for each tab.
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_texts_label));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_images_label));
@@ -72,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         // Set the tabs to fill the entire layout.
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
@@ -102,7 +120,12 @@ public class MainActivity extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference();
         // initialize Firebase Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -308,5 +331,46 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        mSensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+            mGravity = sensorEvent.values;
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+            mGeomagnetic = sensorEvent.values;
+        if (mGravity != null && mGeomagnetic != null) {
+            float R[] = new float[9];
+            float I[] = new float[9];
+            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+            if (success) {
+                float orientation[] = new float[3];
+                SensorManager.getOrientation(R, orientation);
+                pitch = orientation[1]; // orientation contains: azimut, pitch and roll
+                Float temp = new Float(pitch);
+                Log.d("SENSOR", temp.toString());
+                if(pitch > 0.3){
+                    writeMemory(view);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }
