@@ -117,13 +117,11 @@ public class TabFragmentImages extends Fragment {
                             appleSnapshot.getRef().removeValue();
                         }
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
                 });
-
                 list.remove(viewHolder.getAdapterPosition());
                 adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
             }
