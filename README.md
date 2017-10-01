@@ -14,13 +14,16 @@ Mindworld adalah program multi-platform berbasis Android, Unity, dan Arduino di 
 - Lakukan *sign in* dengan Google Account pada tampilan awal Mindworld.
 - Anda dapat mengunggah *memory* dengan menekan tombol '+' di kanan bawah.
 - Anda dapat menulis dan mengunggah catatan dengan menekan tombol bergambar pensil di kanan bawah. (Dapat juga dilakukan dengan mencondongkan device Anda ke belakang.)
-- Anda dapat mengunduh *memory* yang sudah diupload dengan menekan kartu *memory* selama beberapa saat.
-- Anda dapat menghapus *memory* yang sudah diupload dengan menggeser kartu *memory* ke kanan atau kiri.
+- Anda dapat membuka *memory* yang sudah diunggah dengan menekan kartu *memory*.
+- Anda dapat mengunduh *memory* yang sudah diunggah dengan menekan kartu *memory* selama beberapa saat.
+- Anda dapat menghapus *memory* yang sudah diunggah dengan menggeser kartu *memory* ke kanan atau kiri.
 - Anda dapat membuka *headline news* hari ini dengan memilih "Read news" di menu kanan atas.
 - Anda dapat melakukan *sign out* dengan memilih "Sign out" di menu kanan atas.
 
 ### Letak Deliverables
 
 app/src/main/AndroidManifest.xml
+
 app/src/main/java/com/mindworld/howtosurvive/mindworld/*.java
+
 app/src/main/res/**/*.xml
