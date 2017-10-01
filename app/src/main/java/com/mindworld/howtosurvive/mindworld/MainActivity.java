@@ -232,7 +232,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Intent intent = new Intent(this, WriteActivity.class);
         intent.putExtra(EXTRA_USER_ID, mUserId);
         intent.putExtra(EXTRA_USER_LOCALITY, mUserLocation.getLocality());
+        startActivity(intent);
+    }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
     }
 
