@@ -63,7 +63,6 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
 
         @Override
         public void onClick(View view) {
-            //Toast.makeText(context, "clicked ", Toast.LENGTH_LONG).show();
             VideoFile currentFile = MainVideoUploadInfoList.get(getAdapterPosition());
             filename = currentFile.getName();
             if (currentFile.getUri() != null) {
@@ -100,6 +99,7 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
         public boolean onLongClick(View view) {
             Toast.makeText(context, "Downloading..", Toast.LENGTH_LONG).show();
             VideoFile currentFile = MainVideoUploadInfoList.get(getAdapterPosition());
+            filename = currentFile.getName();
             downloadFile(currentFile.getUrl());
             return true;
         }

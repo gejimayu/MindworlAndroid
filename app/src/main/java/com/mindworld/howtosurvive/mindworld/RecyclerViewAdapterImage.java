@@ -70,7 +70,6 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
 
         @Override
         public void onClick(View view) {
-            //Toast.makeText(context, "clicked ", Toast.LENGTH_LONG).show();
             ImageFile currentFile = MainImageUploadInfoList.get(getAdapterPosition());
             filename = currentFile.getName();
             if (currentFile.getUri() != null) {
@@ -83,21 +82,25 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
                 } catch (ActivityNotFoundException e) {
                 }
             } else {
-                Toast.makeText(context, "Downloading..", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Downloading", Toast.LENGTH_LONG).show();
                 downloadFile(currentFile.getUrl());
             }
         }
 
         public void downloadFile(String fileUrl) {
             try {
-                String servicestring = Context.DOWNLOAD_SERVICE;
-                DownloadManager downloadmanager;
-                downloadmanager = (DownloadManager) context.getSystemService(servicestring);
-                Uri uri = Uri.parse(fileUrl);
-                DownloadManager.Request request = new DownloadManager.Request(uri);
-                request.setDestinationInExternalFilesDir(context,
-                        Environment.DIRECTORY_DOWNLOADS, filename);
-                downloadmanager.enqueue(request);
+                if (filename == null)
+                    Toast.makeText(context, "filename null", Toast.LENGTH_LONG).show();
+                else {
+                    String servicestring = Context.DOWNLOAD_SERVICE;
+                    DownloadManager downloadmanager;
+                    downloadmanager = (DownloadManager) context.getSystemService(servicestring);
+                    Uri uri = Uri.parse(fileUrl);
+                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                    request.setDestinationInExternalFilesDir(context,
+                            Environment.DIRECTORY_DOWNLOADS, filename);
+                    downloadmanager.enqueue(request);
+                }
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
             }
@@ -107,6 +110,7 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
         public boolean onLongClick(View view) {
             Toast.makeText(context, "Downloading..", Toast.LENGTH_LONG).show();
             ImageFile currentFile = MainImageUploadInfoList.get(getAdapterPosition());
+            filename = currentFile.getName();
             downloadFile(currentFile.getUrl());
             return true;
         }
