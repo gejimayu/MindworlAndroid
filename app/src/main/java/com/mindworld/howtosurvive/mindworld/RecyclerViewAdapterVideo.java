@@ -1,10 +1,12 @@
 package com.mindworld.howtosurvive.mindworld;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -63,7 +65,7 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
         }
         @Override
         public void onClick(View view) {
-            Toast.makeText(context, "clicked ", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "clicked ", Toast.LENGTH_LONG).show();
             VideoFile currentFile = MainVideoUploadInfoList.get(getAdapterPosition());
             Uri path = currentFile.getUri();
             if (path != null) {
@@ -75,6 +77,27 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
                 }
                 catch (ActivityNotFoundException e) {
                 }
+            }
+            else {
+                if (currentFile.getUrl() == null)
+                    Toast.makeText(context,"null", Toast.LENGTH_LONG).show();
+                downloadFile(currentFile.getUrl());
+            }
+        }
+
+        public void downloadFile(String fileUrl) {
+            try {
+                String servicestring = Context.DOWNLOAD_SERVICE;
+                DownloadManager downloadmanager;
+                downloadmanager = (DownloadManager) context.getSystemService(servicestring);
+                Uri uri = Uri.parse(fileUrl);
+                DownloadManager.Request request = new DownloadManager.Request(uri);
+                request.setDestinationInExternalFilesDir(context,
+                        Environment.DIRECTORY_DOWNLOADS,"test.txt");
+                downloadmanager.enqueue(request);
+            }
+            catch (Exception e) {
+                Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
             }
         }
 
