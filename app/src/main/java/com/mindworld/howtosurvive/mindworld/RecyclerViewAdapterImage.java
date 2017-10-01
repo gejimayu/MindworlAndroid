@@ -23,6 +23,8 @@ import com.mindworld.howtosurvive.mindworld.models.TextFile;
 
 import java.util.List;
 
+import static android.R.attr.path;
+
 public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewAdapterImage.ViewHolder> {
     private Context context;
     private List<ImageFile> MainImageUploadInfoList;
@@ -76,8 +78,8 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
         public void onClick(View view) {
             //Toast.makeText(context, "clicked ", Toast.LENGTH_LONG).show();
             ImageFile currentFile = MainImageUploadInfoList.get(getAdapterPosition());
-            Uri path = currentFile.getUri();
-            if (path != null) {
+            if (currentFile.getUri() != null) {
+                Uri path = Uri.parse(currentFile.getUri());
                 Intent openIntent = new Intent(Intent.ACTION_VIEW);
                 openIntent.setDataAndType(path, "image/*");
                 // Verify that the intent will resolve to an activity
@@ -88,8 +90,7 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
                 }
             }
             else {
-                if (currentFile.getURL() == null)
-                    Toast.makeText(context,"null", Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"Downloading..", Toast.LENGTH_LONG).show();
                 downloadFile(currentFile.getURL());
             }
         }
@@ -112,8 +113,9 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
 
         @Override
         public boolean onLongClick(View view) {
-            Toast.makeText(context, "long clicked ", Toast.LENGTH_LONG).show();
+            Toast.makeText(context,"Downloading..", Toast.LENGTH_LONG).show();
             ImageFile currentFile = MainImageUploadInfoList.get(getAdapterPosition());
+            downloadFile(currentFile.getURL());
             return true;
         }
     }

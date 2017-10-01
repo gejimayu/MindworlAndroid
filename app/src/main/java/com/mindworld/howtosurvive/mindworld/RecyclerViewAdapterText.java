@@ -27,6 +27,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import static android.R.attr.path;
+
 public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAdapterText.ViewHolder> {
     private List<TextFile> MainTextUploadInfoList;
     private Context context;
@@ -74,9 +76,9 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
         public void onClick(View view) {
             //Toast.makeText(context, "clicked ", Toast.LENGTH_LONG).show();
             TextFile currentFile = MainTextUploadInfoList.get(getAdapterPosition());
-            Uri path = currentFile.getUri();
-            if (path != null) {
-                Toast.makeText(context, "opening", Toast.LENGTH_LONG).show();
+            if (currentFile.getUri() != null) {
+                Uri path = Uri.parse(currentFile.getUri());
+                //Toast.makeText(context, "Opening", Toast.LENGTH_LONG).show();
                 Intent openIntent = new Intent(Intent.ACTION_VIEW);
                 openIntent.setDataAndType(path, "text/plain");
                 // Verify that the intent will resolve to an activity
@@ -87,8 +89,7 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
                 }
             }
             else {
-                if (currentFile.getUrl() == null)
-                    Toast.makeText(context,"null", Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"Downloading..", Toast.LENGTH_LONG).show();
                 downloadFile(currentFile.getUrl());
             }
         }
@@ -111,8 +112,9 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
 
         @Override
         public boolean onLongClick(View view) {
-            Toast.makeText(context, "long clicked ", Toast.LENGTH_LONG).show();
+            Toast.makeText(context,"Downloading..", Toast.LENGTH_LONG).show();
             TextFile currentFile = MainTextUploadInfoList.get(getAdapterPosition());
+            downloadFile(currentFile.getUrl());
             return true;
         }
     }

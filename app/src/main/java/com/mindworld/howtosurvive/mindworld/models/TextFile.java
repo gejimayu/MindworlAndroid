@@ -5,14 +5,14 @@ import android.net.Uri;
 public class TextFile {
     public String title;
     public String location;
-    public Uri uriFile;
+    public String uriFile;
     public String url;
 
     public TextFile() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public TextFile(String title, String location, Uri uriFile, String url) {
+    public TextFile(String title, String location, String uriFile, String url) {
         this.title = title;
         this.location = location;
         this.uriFile = uriFile;
@@ -27,7 +27,7 @@ public class TextFile {
         return location;
     }
 
-    public Uri getUri() {
+    public String getUri() {
         return uriFile;
     }
 

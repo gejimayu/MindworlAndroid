@@ -6,13 +6,13 @@ public class ImageFile {
     public String name;
     public String location;
     public String url;
-    public Uri uriFile;
+    public String uriFile;
 
     public ImageFile() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public ImageFile(String name, String location, Uri uriFile, String url) {
+    public ImageFile(String name, String location, String uriFile, String url) {
         this.name = name;
         this.location = location;
         this.url = url;
@@ -29,7 +29,7 @@ public class ImageFile {
 
     public String getLocation() { return location; }
 
-    public Uri getUri() {
+    public String getUri() {
         return uriFile;
     }
 }

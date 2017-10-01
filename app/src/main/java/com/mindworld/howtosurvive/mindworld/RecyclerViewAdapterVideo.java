@@ -17,9 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mindworld.howtosurvive.mindworld.models.ImageFile;
+import com.mindworld.howtosurvive.mindworld.models.TextFile;
 import com.mindworld.howtosurvive.mindworld.models.VideoFile;
 
 import java.util.List;
+
+import static android.R.attr.path;
 
 public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewAdapterVideo.ViewHolder> {
     private List<VideoFile> MainVideoUploadInfoList;
@@ -67,8 +70,8 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
         public void onClick(View view) {
             //Toast.makeText(context, "clicked ", Toast.LENGTH_LONG).show();
             VideoFile currentFile = MainVideoUploadInfoList.get(getAdapterPosition());
-            Uri path = currentFile.getUri();
-            if (path != null) {
+            if (currentFile.getUri() != null) {
+                Uri path = Uri.parse(currentFile.getUri());
                 Intent openIntent = new Intent(Intent.ACTION_VIEW);
                 openIntent.setDataAndType(path, "video/*");
                 // Verify that the intent will resolve to an activity
@@ -79,8 +82,7 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
                 }
             }
             else {
-                if (currentFile.getUrl() == null)
-                    Toast.makeText(context,"null", Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"Downloading..", Toast.LENGTH_LONG).show();
                 downloadFile(currentFile.getUrl());
             }
         }
@@ -103,8 +105,9 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
 
         @Override
         public boolean onLongClick(View view) {
-            Toast.makeText(context, "long clicked ", Toast.LENGTH_LONG).show();
+            Toast.makeText(context,"Downloading..", Toast.LENGTH_LONG).show();
             VideoFile currentFile = MainVideoUploadInfoList.get(getAdapterPosition());
+            downloadFile(currentFile.getUrl());
             return true;
         }
     }

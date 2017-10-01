@@ -164,32 +164,32 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                         @SuppressWarnings("VisibleForTests")
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        String downloadUrl = taskSnapshot.getDownloadUrl().toString();
                         // Showing toast message after done uploading.
                         Toast.makeText(getApplicationContext(), "File Uploaded Successfully ", Toast.LENGTH_LONG).show();
 
                         DatabaseReference db;
                         if (mimetype.contains("image")) {
                             @SuppressWarnings("VisibleForTests")
-                            ImageFile imageUploadInfo = new ImageFile(filename, filelocation, fileUri,
-                                    taskSnapshot.getDownloadUrl().toString());
+                            ImageFile imageUploadInfo = new ImageFile(filename, filelocation, fileUri.toString(),
+                                    downloadUrl);
                             //push into database
                             db = mDatabase.child("image").push();
                             db.setValue(imageUploadInfo);
                         } else if (mimetype.contains("text")) {
                             @SuppressWarnings("VisibleForTests")
-                            TextFile txt = new TextFile(filename, filelocation, fileUri,
-                                    taskSnapshot.getDownloadUrl().toString());
+                            TextFile txt = new TextFile(filename, filelocation, fileUri.toString(),
+                                    downloadUrl);
                             // push into database
                             db = mDatabase.child("text").push();
                             db.setValue(txt);
                         } else if (mimetype.contains("video")) {
                             @SuppressWarnings("VisibleForTests")
-                            VideoFile txt = new VideoFile(filename, filelocation, fileUri,
-                                    taskSnapshot.getDownloadUrl().toString());
+                            VideoFile vid = new VideoFile(filename, filelocation, fileUri.toString(),
+                                    downloadUrl);
                             // push into database
                             db = mDatabase.child("video").push();
-                            db.setValue(txt);
+                            db.setValue(vid);
                         }
                     }
                 });
