@@ -6,22 +6,22 @@
     tools:context="com.mindworld.howtosurvive.mindworld.NewsActivity">
 
     <TextView
+        android:id="@+id/news_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="49dp"
-        android:textSize="@dimen/larger_font_size"
-        android:id="@+id/news_title"
-        android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/news_body"
-        android:layout_alignStart="@+id/news_body" />
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/news_body"
+        android:layout_marginTop="49dp"
+        android:textSize="@dimen/larger_font_size" />
 
     <TextView
+        android:id="@+id/news_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/news_body"
-        android:layout_marginTop="80dp"
-        android:layout_below="@+id/news_title"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@+id/news_title"
+        android:layout_marginTop="80dp" />
 
 </RelativeLayout>

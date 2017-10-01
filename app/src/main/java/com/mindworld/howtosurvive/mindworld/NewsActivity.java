@@ -1,7 +1,7 @@
 package com.mindworld.howtosurvive.mindworld;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 public class NewsActivity extends AppCompatActivity {

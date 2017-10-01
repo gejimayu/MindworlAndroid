@@ -1,9 +1,11 @@
 package com.mindworld.howtosurvive.mindworld;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.mindworld.howtosurvive.mindworld.models.ImageFile;
 
 import java.util.ArrayList;
@@ -21,15 +25,14 @@ import java.util.List;
 public class TabFragmentImages extends Fragment {
     // Main Activity Context
     View view;
+    // apps context
+    Context context;
     // Creating DatabaseReference.
     DatabaseReference databaseReference;
-
     // Creating RecyclerView.
     RecyclerView recyclerView;
-
     // Creating RecyclerView.Adapter.
     RecyclerView.Adapter adapter;
-
     // Creating List of ImageUploadInfo class.
     List<ImageFile> list = new ArrayList<>();
 
@@ -41,6 +44,9 @@ public class TabFragmentImages extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.tab_fragment_images, container, false);
+
+        context = view.getContext();
+
         // Assign id to RecyclerView.
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_image);
 
@@ -57,14 +63,14 @@ public class TabFragmentImages extends Fragment {
         // Adding Add Value Event Listener to databaseReference.
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot snapshot, String prevChildKey) {
-                ImageFile imageUploadInfo = snapshot.getValue(ImageFile.class);
+            public void onChildAdded(final DataSnapshot snapshot, String prevChildKey) {
+                ImageFile img = snapshot.getValue(ImageFile.class);
 
-                list.add(imageUploadInfo);
-
-                adapter = new RecyclerViewAdapterImage(view.getContext(), list);
-
-                recyclerView.setAdapter(adapter);
+                if (MainActivity.mUserId.equals(img.getUploaderID())) {
+                    list.add(img);
+                    adapter = new RecyclerViewAdapterImage(view.getContext(), list);
+                    recyclerView.setAdapter(adapter);
+                }
             }
 
             @Override
@@ -87,7 +93,38 @@ public class TabFragmentImages extends Fragment {
 
             }
         });
-        // Inflate the layout for this fragment
+
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper
+                .SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                ImageFile toBeRemoved = list.get(viewHolder.getAdapterPosition());
+                Query query = databaseReference.orderByChild("name").equalTo(toBeRemoved.getName());
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot appleSnapshot : dataSnapshot.getChildren()) {
+                            appleSnapshot.getRef().removeValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                list.remove(viewHolder.getAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        });
+
+        touchHelper.attachToRecyclerView(recyclerView);
+
         return view;
     }
 }

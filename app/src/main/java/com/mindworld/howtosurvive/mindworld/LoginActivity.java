@@ -24,10 +24,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
-    private static final String TAG = "LoginActivity";
-
     public static final String EXTRA_USER_ID = "com.mindworld.howtosurvive.mindworld.extra.USER_ID";
-
+    private static final String TAG = "LoginActivity";
     private static final int SIGN_IN_REQUEST_CODE = 1001;
     private static final int SIGN_OUT_REQUEST_CODE = 1002;
 

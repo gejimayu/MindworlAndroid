@@ -18,7 +18,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,18 +40,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 2002;
 
     private static final String SHARED_PREF_FILE = "com.mindworld.howtosurvive.mindworld";
-
+    public static String mUserId;
     Sensor mAccelerometer;
     Sensor mMagnetometer;
     float[] mGravity;
     float[] mGeomagnetic;
     float mPitch;
-
     TabLayout mTabLayout;
     ViewPager mViewPager;
     View mView;
-
-    private String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private SharedPreferences mPreferences;
@@ -64,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -158,16 +155,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             finish();
 
             return true;
-        }
-        else if(item.getItemId() == R.id.read_news){
+        } else if (item.getItemId() == R.id.read_news) {
             String news = "news";
             Intent intent = new Intent(this, NewsActivity.class);
             intent.putExtra(EXTRA_NEWS, news);
             startActivity(intent);
 
             return true;
-        }
-        else{
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
@@ -225,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 mPitch = orientation[1]; // orientation contains: azimut, pitch and roll
                 Float temp = new Float(mPitch);
 
-                Log.d("Sensor", temp.toString());
+                // Log.d("Sensor", temp.toString());
 
                 if (mPitch > 0.3) {
                     writeMemory(mView);

@@ -24,11 +24,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class WriteActivity extends AppCompatActivity {
+    String mLocality;
     private String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
-
-    String mLocality;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,6 @@ public class WriteActivity extends AppCompatActivity {
 
         // initialize User ID from Firebase Authentication
         mUserId = getIntent().getStringExtra(MainActivity.EXTRA_USER_ID);
-
         // initialize Firebase references
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -53,7 +51,7 @@ public class WriteActivity extends AppCompatActivity {
         String text = memoryText.getText().toString();
 
         EditText memoryName = (EditText) findViewById(R.id.memory_name);
-        final String filename = memoryName.getText().toString();
+        final String filename = memoryName.getText().toString() + ".txt";
 
         FileOutputStream outputStream;
 
@@ -63,15 +61,15 @@ public class WriteActivity extends AppCompatActivity {
             outputStream.write(text.getBytes());
             outputStream.close();
 
-            // get <mFilename>.txt's URI
+            // get <mFilename>.txt URI
             File file = new File(getFilesDir() + "/" + filename);
             Uri fileUri = Uri.fromFile(file);
-            // build <mFilename>.txt's metadata
+            // build <mFilename>.txt metadata
             StorageMetadata metadata = new StorageMetadata.Builder()
                     .setContentType("text/plain")
                     .build();
             // upload memory to Firebase Cloud Storage
-            StorageReference memoryRef = mStorageRef.child("user/" + mUserId + "/" + fileUri.getLastPathSegment());
+            StorageReference memoryRef = mStorageRef.child("user/" + MainActivity.mUserId + "/" + fileUri.getLastPathSegment());
             UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
             // delete <mFilename>.txt
@@ -89,9 +87,9 @@ public class WriteActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Upload succeed.", Toast.LENGTH_LONG).show();
 
                     DatabaseReference databaseReference;
-
-                    TextFile txt = new TextFile(filename, mLocality);
-                    // push into database
+                    @SuppressWarnings("VisibleForTests")
+                    TextFile txt = new TextFile(filename, mLocality, null,
+                            taskSnapshot.getDownloadUrl().toString(), mUserId);
                     databaseReference = mDatabase.child("text").push();
                     databaseReference.setValue(txt);
                 }

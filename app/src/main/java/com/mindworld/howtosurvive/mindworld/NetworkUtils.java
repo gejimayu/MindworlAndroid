@@ -17,13 +17,13 @@ public class NetworkUtils {
     private static final String LOG_TAG = NetworkUtils.class.getSimpleName();
     private static final String NEWS_URL = "https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=172bb701d79e40448fbdec6003868bd8";
 
-    static String getNews(){
+    static String getNews() {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String newsJSONString = null;
 
 
-        try{
+        try {
             URL requestURL = new URL(NEWS_URL);
 
             urlConnection = (HttpURLConnection) requestURL.openConnection();
@@ -46,11 +46,10 @@ public class NetworkUtils {
                 return null;
             }
             newsJSONString = buffer.toString();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }finally{
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }

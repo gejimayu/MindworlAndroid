@@ -1,9 +1,11 @@
 package com.mindworld.howtosurvive.mindworld;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.mindworld.howtosurvive.mindworld.models.VideoFile;
 
 import java.util.ArrayList;
@@ -21,6 +25,8 @@ import java.util.List;
 public class TabFragmentVideos extends Fragment {
     // Main Activity Context
     View view;
+    // apps context
+    Context context;
     // Creating DatabaseReference.
     DatabaseReference databaseReference;
 
@@ -43,6 +49,8 @@ public class TabFragmentVideos extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.tab_fragment_videos, container, false);
+
+        context = view.getContext();
         // Assign id to RecyclerView.
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_video);
 
@@ -60,14 +68,13 @@ public class TabFragmentVideos extends Fragment {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String prevChildKey) {
+                VideoFile vid = snapshot.getValue(VideoFile.class);
 
-                VideoFile videoUploadInfo = snapshot.getValue(VideoFile.class);
-
-                list.add(videoUploadInfo);
-
-                adapter = new RecyclerViewAdapterVideo(view.getContext(), list);
-
-                recyclerView.setAdapter(adapter);
+                if (MainActivity.mUserId.equals(vid.getUploaderID())) {
+                    list.add(vid);
+                    adapter = new RecyclerViewAdapterVideo(view.getContext(), list);
+                    recyclerView.setAdapter(adapter);
+                }
             }
 
             @Override
@@ -90,6 +97,38 @@ public class TabFragmentVideos extends Fragment {
 
             }
         });
+
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper
+                .SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                VideoFile toBeRemoved = list.get(viewHolder.getAdapterPosition());
+                Query query = databaseReference.orderByChild("title").equalTo(toBeRemoved.getName());
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot appleSnapshot : dataSnapshot.getChildren()) {
+                            appleSnapshot.getRef().removeValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                list.remove(viewHolder.getAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        });
+
+        touchHelper.attachToRecyclerView(recyclerView);
+
         // Inflate the layout for this fragment
         return view;
     }
