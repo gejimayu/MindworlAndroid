@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 2002;
 
     private static final String SHARED_PREF_FILE = "com.mindworld.howtosurvive.mindworld";
-    public static String mUserId;
     Sensor mAccelerometer;
     Sensor mMagnetometer;
     float[] mGravity;
@@ -50,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     ViewPager mViewPager;
     View mView;
     private StorageReference mStorageRef;
+    public static String mUserId;
     private DatabaseReference mDatabaseRef;
     private SharedPreferences mPreferences;
     private SensorManager mSensorManager;
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 mPitch = orientation[1]; // orientation contains: azimut, pitch and roll
                 Float temp = new Float(mPitch);
 
-                Log.d("Sensor", temp.toString());
+                // Log.d("Sensor", temp.toString());
 
                 if (mPitch > 0.3) {
                     writeMemory(mView);
@@ -263,5 +263,4 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mUserLocation.findLocation();
         }
     }
-
 }

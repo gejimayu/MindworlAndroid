@@ -26,9 +26,11 @@ import java.io.FileOutputStream;
 import static com.mindworld.howtosurvive.mindworld.MainActivity.mUserId;
 
 public class WriteActivity extends AppCompatActivity {
-    String mLocality;
+    private String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
+
+    String mLocality;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +92,7 @@ public class WriteActivity extends AppCompatActivity {
                     DatabaseReference databaseReference;
                     @SuppressWarnings("VisibleForTests")
                     TextFile txt = new TextFile(filename, mLocality, null,
-                            taskSnapshot.getDownloadUrl().toString(), MainActivity.mUserId);
+                            taskSnapshot.getDownloadUrl().toString(), mUserId);
                     databaseReference = mDatabase.child("text").push();
                     databaseReference.setValue(txt);
                 }
