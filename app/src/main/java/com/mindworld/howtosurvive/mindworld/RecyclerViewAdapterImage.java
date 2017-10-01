@@ -1,6 +1,5 @@
 package com.mindworld.howtosurvive.mindworld;
 
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -8,9 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,11 +16,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.mindworld.howtosurvive.mindworld.models.ImageFile;
-import com.mindworld.howtosurvive.mindworld.models.TextFile;
 
 import java.util.List;
-
-import static android.R.attr.path;
 
 public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewAdapterImage.ViewHolder> {
     private Context context;
@@ -49,7 +43,7 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
         holder.imageLocationTextView.setText(imageUploadInfo.getLocation());
         holder.imageNameTextView.setTag(position);
         // load image from Glide library
-        Glide.with(context).load(imageUploadInfo.getURL()).into(holder.imageView);
+        Glide.with(context).load(imageUploadInfo.getUrl()).into(holder.imageView);
     }
 
     @Override
@@ -57,8 +51,7 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
         return MainImageUploadInfoList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener  {
-
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private ImageView imageView;
         private TextView imageNameTextView;
         private TextView imageLocationTextView;
@@ -87,13 +80,11 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
                 // Verify that the intent will resolve to an activity
                 try {
                     context.startActivity(openIntent);
+                } catch (ActivityNotFoundException e) {
                 }
-                catch (ActivityNotFoundException e) {
-                }
-            }
-            else {
-                Toast.makeText(context,"Downloading..", Toast.LENGTH_LONG).show();
-                downloadFile(currentFile.getURL());
+            } else {
+                Toast.makeText(context, "Downloading..", Toast.LENGTH_LONG).show();
+                downloadFile(currentFile.getUrl());
             }
         }
 
@@ -107,17 +98,16 @@ public class RecyclerViewAdapterImage extends RecyclerView.Adapter<RecyclerViewA
                 request.setDestinationInExternalFilesDir(context,
                         Environment.DIRECTORY_DOWNLOADS, filename);
                 downloadmanager.enqueue(request);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
             }
         }
 
         @Override
         public boolean onLongClick(View view) {
-            Toast.makeText(context,"Downloading..", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Downloading..", Toast.LENGTH_LONG).show();
             ImageFile currentFile = MainImageUploadInfoList.get(getAdapterPosition());
-            downloadFile(currentFile.getURL());
+            downloadFile(currentFile.getUrl());
             return true;
         }
     }

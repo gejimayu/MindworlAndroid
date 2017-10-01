@@ -1,13 +1,11 @@
 package com.mindworld.howtosurvive.mindworld.models;
 
-import android.net.Uri;
-
 public class ImageFile {
     public String name;
     public String location;
-    public String url;
     public String uriFile;
-    private String uploaderID;
+    public String url;
+    public String uploaderID;
 
     public ImageFile() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
@@ -16,8 +14,8 @@ public class ImageFile {
     public ImageFile(String name, String location, String uriFile, String url, String uploaderID) {
         this.name = name;
         this.location = location;
-        this.url = url;
         this.uriFile = uriFile;
+        this.url = url;
         this.uploaderID = uploaderID;
     }
 
@@ -25,11 +23,13 @@ public class ImageFile {
         return name;
     }
 
-    public String getURL() {
+    public String getUrl() {
         return url;
     }
 
-    public String getLocation() { return location; }
+    public String getLocation() {
+        return location;
+    }
 
     public String getUri() {
         return uriFile;

@@ -1,6 +1,5 @@
 package com.mindworld.howtosurvive.mindworld;
 
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -8,21 +7,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mindworld.howtosurvive.mindworld.models.ImageFile;
-import com.mindworld.howtosurvive.mindworld.models.TextFile;
 import com.mindworld.howtosurvive.mindworld.models.VideoFile;
 
 import java.util.List;
-
-import static android.R.attr.path;
 
 public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewAdapterVideo.ViewHolder> {
     private List<VideoFile> MainVideoUploadInfoList;
@@ -53,7 +46,7 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
         return MainVideoUploadInfoList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private TextView videoNameTextView;
         private TextView videoLocationTextView;
         private String filename;
@@ -67,6 +60,7 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
+
         @Override
         public void onClick(View view) {
             //Toast.makeText(context, "clicked ", Toast.LENGTH_LONG).show();
@@ -79,12 +73,10 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
                 // Verify that the intent will resolve to an activity
                 try {
                     context.startActivity(openIntent);
+                } catch (ActivityNotFoundException e) {
                 }
-                catch (ActivityNotFoundException e) {
-                }
-            }
-            else {
-                Toast.makeText(context,"Downloading..", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(context, "Downloading..", Toast.LENGTH_LONG).show();
                 downloadFile(currentFile.getUrl());
             }
         }
@@ -99,15 +91,14 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
                 request.setDestinationInExternalFilesDir(context,
                         Environment.DIRECTORY_DOWNLOADS, filename);
                 downloadmanager.enqueue(request);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
             }
         }
 
         @Override
         public boolean onLongClick(View view) {
-            Toast.makeText(context,"Downloading..", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Downloading..", Toast.LENGTH_LONG).show();
             VideoFile currentFile = MainVideoUploadInfoList.get(getAdapterPosition());
             downloadFile(currentFile.getUrl());
             return true;

@@ -7,7 +7,7 @@ public class TextFile {
     public String location;
     public String uriFile;
     public String url;
-    private String uploaderID;
+    public String uploaderID;
 
     public TextFile() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)

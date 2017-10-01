@@ -1,6 +1,5 @@
 package com.mindworld.howtosurvive.mindworld;
 
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -8,9 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,16 +15,7 @@ import android.widget.Toast;
 
 import com.mindworld.howtosurvive.mindworld.models.TextFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
-
-import static android.R.attr.path;
 
 public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAdapterText.ViewHolder> {
     private List<TextFile> MainTextUploadInfoList;
@@ -58,7 +46,7 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
         return MainTextUploadInfoList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private TextView textNameTextView;
         private TextView textLocationTextView;
         private String filename;
@@ -86,12 +74,10 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
                 // Verify that the intent will resolve to an activity
                 try {
                     context.startActivity(openIntent);
+                } catch (ActivityNotFoundException e) {
                 }
-                catch (ActivityNotFoundException e) {
-                }
-            }
-            else {
-                Toast.makeText(context,"Downloading..", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(context, "Downloading..", Toast.LENGTH_LONG).show();
                 downloadFile(currentFile.getUrl());
             }
         }
@@ -106,15 +92,14 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
                 request.setDestinationInExternalFilesDir(context,
                         Environment.DIRECTORY_DOWNLOADS, filename);
                 downloadmanager.enqueue(request);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
             }
         }
 
         @Override
         public boolean onLongClick(View view) {
-            Toast.makeText(context,"Downloading..", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Downloading..", Toast.LENGTH_LONG).show();
             TextFile currentFile = MainTextUploadInfoList.get(getAdapterPosition());
             downloadFile(currentFile.getUrl());
             return true;

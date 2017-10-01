@@ -29,8 +29,7 @@ public class WriteActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
 
-    String filename;
-    String filelocation;
+    String mLocality;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +38,14 @@ public class WriteActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // initialize Firebase Cloud Storage reference
+        // initialize User ID from Firebase Authentication
+        mUserId = getIntent().getStringExtra(MainActivity.EXTRA_USER_ID);
+        // initialize Firebase references
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        //initialize Firebase Database Reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // obtain user locality
+        mLocality = getIntent().getStringExtra(MainActivity.EXTRA_USER_LOCALITY);
     }
 
     public void sendMemory(View view) {
@@ -51,21 +53,20 @@ public class WriteActivity extends AppCompatActivity {
         String text = memoryText.getText().toString();
 
         EditText memoryName = (EditText) findViewById(R.id.memory_name);
-        filename = memoryName.getText().toString();
-        filelocation = "New York City";
+        final String filename = memoryName.getText().toString();
 
         FileOutputStream outputStream;
 
         try {
-            // write text to <filename>.txt
+            // write text to <mFilename>.txt
             outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
             outputStream.write(text.getBytes());
             outputStream.close();
 
-            // get <filename>.txt's URI
+            // get <mFilename>.txt's URI
             File file = new File(getFilesDir() + "/" + filename);
             Uri fileUri = Uri.fromFile(file);
-            // build <filename>.txt metadata
+            // build <mFilename>.txt's metadata
             StorageMetadata metadata = new StorageMetadata.Builder()
                     .setContentType("text/plain")
                     .build();
@@ -73,26 +74,26 @@ public class WriteActivity extends AppCompatActivity {
             StorageReference memoryRef = mStorageRef.child("user/" + MainActivity.mUserId + "/" + fileUri.getLastPathSegment());
             UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
-            // delete <filename>.txt
+            // delete <mFilename>.txt
             file.delete();
 
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(getApplicationContext(), "Upload failed ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Upload failed.", Toast.LENGTH_LONG).show();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // Showing toast message after done uploading.
-                    Toast.makeText(getApplicationContext(), "File Uploaded Successfully ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Upload succeed.", Toast.LENGTH_LONG).show();
 
-                    DatabaseReference db;
+                    DatabaseReference databaseReference;
                     @SuppressWarnings("VisibleForTests")
-                    TextFile txt = new TextFile(filename, filelocation, null,
+                    TextFile txt = new TextFile(filename, mLocality, null,
                             taskSnapshot.getDownloadUrl().toString(), MainActivity.mUserId);
-                    db = mDatabase.child("text").push();
-                    db.setValue(txt);
+                    databaseReference = mDatabase.child("text").push();
+                    databaseReference.setValue(txt);
                 }
             });
 
