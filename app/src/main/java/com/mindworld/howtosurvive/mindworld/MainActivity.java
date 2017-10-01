@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
 
-    String filename;
+    Ringtone filename;
     String filelocation;
     String mimetype;
     Uri fileUri;
@@ -149,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
                 // get file name
-                filename = fileUri.getLastPathSegment();
+                filename = RingtoneManager.getRingtone(this, fileUri);
 
                 // get file location
                 accessCity();
@@ -169,23 +171,24 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "File Uploaded Successfully ", Toast.LENGTH_LONG).show();
 
                         DatabaseReference db;
+
                         if (mimetype.contains("image")) {
                             @SuppressWarnings("VisibleForTests")
-                            ImageFile imageUploadInfo = new ImageFile(filename, filelocation, fileUri.toString(),
+                            ImageFile imageUploadInfo = new ImageFile(filename.getTitle(context), filelocation, fileUri.toString(),
                                     downloadUrl);
                             //push into database
                             db = mDatabase.child("image").push();
                             db.setValue(imageUploadInfo);
                         } else if (mimetype.contains("text")) {
                             @SuppressWarnings("VisibleForTests")
-                            TextFile txt = new TextFile(filename, filelocation, fileUri.toString(),
+                            TextFile txt = new TextFile(filename.getTitle(context), filelocation, fileUri.toString(),
                                     downloadUrl);
                             // push into database
                             db = mDatabase.child("text").push();
                             db.setValue(txt);
                         } else if (mimetype.contains("video")) {
                             @SuppressWarnings("VisibleForTests")
-                            VideoFile vid = new VideoFile(filename, filelocation, fileUri.toString(),
+                            VideoFile vid = new VideoFile(filename.getTitle(context), filelocation, fileUri.toString(),
                                     downloadUrl);
                             // push into database
                             db = mDatabase.child("video").push();
