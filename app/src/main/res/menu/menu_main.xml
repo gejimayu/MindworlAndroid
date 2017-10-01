@@ -4,6 +4,12 @@
     tools:context="com.mindworld.howtosurvive.mindworld.MainActivity">
 
     <item
+        android:id="@+id/read_news"
+        android:orderInCategory="20"
+        android:title="@string/menu_read_news"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/sign_out"
         android:orderInCategory="30"
         android:title="@string/menu_sign_out"

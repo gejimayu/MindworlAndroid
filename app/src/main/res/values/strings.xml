@@ -19,4 +19,5 @@
     <string name="write_hint">Write your memory here</string>
     <string name="write_memory_button">Send</string>
     <string name="write_save">Done</string>
+    <string name="menu_read_news">Read News</string>
 </resources>

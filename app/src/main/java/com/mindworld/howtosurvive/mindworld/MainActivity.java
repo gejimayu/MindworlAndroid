@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static final String EXTRA_REPLY = "com.mindworld.howtosurvive.mindworld.extra.REPLY";
     public static final String EXTRA_USER_ID = "com.mindworld.howtosurvive.mindworld.extra.USER_ID";
     public static final String EXTRA_USER_LOCALITY = "com.mindworld.howtosurvive.mindworld.extra.USER_LOCALITY";
+    public static final String EXTRA_NEWS = "com.mindworld.howtosurvive.mindworld.extra.NEWS";
 
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 1001;
 
@@ -157,7 +158,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             finish();
 
             return true;
-        } else {
+        }
+        else if(item.getItemId() == R.id.read_news){
+            String news = "news";
+            Intent intent = new Intent(this, NewsActivity.class);
+            intent.putExtra(EXTRA_NEWS, news);
+            startActivity(intent);
+
+            return true;
+        }
+        else{
             return super.onOptionsItemSelected(item);
         }
     }
