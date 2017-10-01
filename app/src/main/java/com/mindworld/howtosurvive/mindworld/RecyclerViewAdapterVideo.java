@@ -56,6 +56,7 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         private TextView videoNameTextView;
         private TextView videoLocationTextView;
+        private String filename;
 
         private ViewHolder(View itemView) {
             super(itemView);
@@ -70,6 +71,7 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
         public void onClick(View view) {
             //Toast.makeText(context, "clicked ", Toast.LENGTH_LONG).show();
             VideoFile currentFile = MainVideoUploadInfoList.get(getAdapterPosition());
+            filename = currentFile.getName();
             if (currentFile.getUri() != null) {
                 Uri path = Uri.parse(currentFile.getUri());
                 Intent openIntent = new Intent(Intent.ACTION_VIEW);
@@ -95,7 +97,7 @@ public class RecyclerViewAdapterVideo extends RecyclerView.Adapter<RecyclerViewA
                 Uri uri = Uri.parse(fileUrl);
                 DownloadManager.Request request = new DownloadManager.Request(uri);
                 request.setDestinationInExternalFilesDir(context,
-                        Environment.DIRECTORY_DOWNLOADS,"test.txt");
+                        Environment.DIRECTORY_DOWNLOADS, filename);
                 downloadmanager.enqueue(request);
             }
             catch (Exception e) {

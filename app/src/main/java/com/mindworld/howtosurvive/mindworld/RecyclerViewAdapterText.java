@@ -61,6 +61,7 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         private TextView textNameTextView;
         private TextView textLocationTextView;
+        private String filename;
 
         private ViewHolder(View itemView) {
             super(itemView);
@@ -76,6 +77,7 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
         public void onClick(View view) {
             //Toast.makeText(context, "clicked ", Toast.LENGTH_LONG).show();
             TextFile currentFile = MainTextUploadInfoList.get(getAdapterPosition());
+            filename = currentFile.getName();
             if (currentFile.getUri() != null) {
                 Uri path = Uri.parse(currentFile.getUri());
                 //Toast.makeText(context, "Opening", Toast.LENGTH_LONG).show();
@@ -102,7 +104,7 @@ public class RecyclerViewAdapterText extends RecyclerView.Adapter<RecyclerViewAd
                 Uri uri = Uri.parse(fileUrl);
                 DownloadManager.Request request = new DownloadManager.Request(uri);
                 request.setDestinationInExternalFilesDir(context,
-                        Environment.DIRECTORY_DOWNLOADS,"test.txt");
+                        Environment.DIRECTORY_DOWNLOADS, filename);
                 downloadmanager.enqueue(request);
             }
             catch (Exception e) {
