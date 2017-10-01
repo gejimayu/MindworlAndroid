@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
     private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2002;
 
-    private String mUserId;
+    public static String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
 

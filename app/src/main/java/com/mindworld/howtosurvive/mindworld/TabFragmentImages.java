@@ -69,13 +69,13 @@ public class TabFragmentImages extends Fragment {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot snapshot, String prevChildKey) {
-                ImageFile imageUploadInfo = snapshot.getValue(ImageFile.class);
+                ImageFile img = snapshot.getValue(ImageFile.class);
 
-                list.add(imageUploadInfo);
-
-                adapter = new RecyclerViewAdapterImage(view.getContext(), list);
-
-                recyclerView.setAdapter(adapter);
+                if (MainActivity.mUserId.equals(img.getUploaderID())) {
+                    list.add(img);
+                    adapter = new RecyclerViewAdapterImage(view.getContext(), list);
+                    recyclerView.setAdapter(adapter);
+                }
             }
 
             @Override

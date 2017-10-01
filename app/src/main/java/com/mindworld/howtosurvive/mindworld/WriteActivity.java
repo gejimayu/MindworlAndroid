@@ -23,8 +23,9 @@ import com.mindworld.howtosurvive.mindworld.models.TextFile;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import static com.mindworld.howtosurvive.mindworld.MainActivity.mUserId;
+
 public class WriteActivity extends AppCompatActivity {
-    private String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
 
@@ -37,9 +38,6 @@ public class WriteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_write);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        // initialize User ID from Firebase Authentication
-        mUserId = getIntent().getStringExtra(LoginActivity.EXTRA_UID);
 
         // initialize Firebase Cloud Storage reference
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -72,7 +70,7 @@ public class WriteActivity extends AppCompatActivity {
                     .setContentType("text/plain")
                     .build();
             // upload memory to Firebase Cloud Storage
-            StorageReference memoryRef = mStorageRef.child("user/" + mUserId + "/" + fileUri.getLastPathSegment());
+            StorageReference memoryRef = mStorageRef.child("user/" + MainActivity.mUserId + "/" + fileUri.getLastPathSegment());
             UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
 
             // delete <filename>.txt
@@ -91,7 +89,8 @@ public class WriteActivity extends AppCompatActivity {
 
                     DatabaseReference db;
                     @SuppressWarnings("VisibleForTests")
-                    TextFile txt = new TextFile(mUserId, filename, filelocation, null, taskSnapshot.getDownloadUrl().toString());
+                    TextFile txt = new TextFile(filename, filelocation, null,
+                            taskSnapshot.getDownloadUrl().toString(), MainActivity.mUserId);
                     db = mDatabase.child("text").push();
                     db.setValue(txt);
                 }

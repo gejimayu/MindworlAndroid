@@ -72,14 +72,13 @@ public class TabFragmentTexts extends Fragment {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String prevChildKey) {
+                TextFile txt = snapshot.getValue(TextFile.class);
 
-                TextFile textUploadInfo = snapshot.getValue(TextFile.class);
-
-                list.add(textUploadInfo);
-
-                adapter = new RecyclerViewAdapterText(view.getContext(), list);
-
-                recyclerView.setAdapter(adapter);
+                if (MainActivity.mUserId.equals(txt.getUploaderID())) {
+                    list.add(txt);
+                    adapter = new RecyclerViewAdapterText(view.getContext(), list);
+                    recyclerView.setAdapter(adapter);
+                }
             }
 
             @Override

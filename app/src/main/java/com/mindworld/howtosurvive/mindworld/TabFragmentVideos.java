@@ -72,14 +72,13 @@ public class TabFragmentVideos extends Fragment {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String prevChildKey) {
+                VideoFile vid = snapshot.getValue(VideoFile.class);
 
-                VideoFile videoUploadInfo = snapshot.getValue(VideoFile.class);
-
-                list.add(videoUploadInfo);
-
-                adapter = new RecyclerViewAdapterVideo(view.getContext(), list);
-
-                recyclerView.setAdapter(adapter);
+                if (MainActivity.mUserId.equals(vid.getUploaderID())) {
+                    list.add(vid);
+                    adapter = new RecyclerViewAdapterVideo(view.getContext(), list);
+                    recyclerView.setAdapter(adapter);
+                }
             }
 
             @Override
