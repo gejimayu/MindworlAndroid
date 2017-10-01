@@ -23,14 +23,11 @@ import com.mindworld.howtosurvive.mindworld.models.TextFile;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import static com.mindworld.howtosurvive.mindworld.MainActivity.mUserId;
-
 public class WriteActivity extends AppCompatActivity {
+    String mLocality;
     private String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
-
-    String mLocality;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

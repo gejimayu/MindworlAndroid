@@ -18,7 +18,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static final String EXTRA_REPLY = "com.mindworld.howtosurvive.mindworld.extra.REPLY";
     public static final String EXTRA_USER_ID = "com.mindworld.howtosurvive.mindworld.extra.USER_ID";
     public static final String EXTRA_USER_LOCALITY = "com.mindworld.howtosurvive.mindworld.extra.USER_LOCALITY";
+    public static final String EXTRA_NEWS = "com.mindworld.howtosurvive.mindworld.extra.NEWS";
 
     private static final int READ_FILE_BROWSER_REQUEST_CODE = 1001;
 
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 2002;
 
     private static final String SHARED_PREF_FILE = "com.mindworld.howtosurvive.mindworld";
+    public static String mUserId;
     Sensor mAccelerometer;
     Sensor mMagnetometer;
     float[] mGravity;
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     ViewPager mViewPager;
     View mView;
     private StorageReference mStorageRef;
-    public static String mUserId;
     private DatabaseReference mDatabaseRef;
     private SharedPreferences mPreferences;
     private SensorManager mSensorManager;
@@ -153,6 +153,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             setResult(RESULT_OK, intent);
 
             finish();
+
+            return true;
+        } else if (item.getItemId() == R.id.read_news) {
+            String news = "news";
+            Intent intent = new Intent(this, NewsActivity.class);
+            intent.putExtra(EXTRA_NEWS, news);
+            startActivity(intent);
 
             return true;
         } else {
