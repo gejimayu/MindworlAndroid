@@ -6,9 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,17 +17,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -49,18 +40,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 2002;
 
     private static final String SHARED_PREF_FILE = "com.mindworld.howtosurvive.mindworld";
-
+    public static String mUserId;
     Sensor mAccelerometer;
     Sensor mMagnetometer;
     float[] mGravity;
     float[] mGeomagnetic;
     float mPitch;
-
     TabLayout mTabLayout;
     ViewPager mViewPager;
     View mView;
-
-    public static String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private SharedPreferences mPreferences;

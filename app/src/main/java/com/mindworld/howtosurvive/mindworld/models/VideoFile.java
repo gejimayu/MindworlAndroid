@@ -1,7 +1,5 @@
 package com.mindworld.howtosurvive.mindworld.models;
 
-import android.net.Uri;
-
 public class VideoFile {
     public String title;
     public String location;
@@ -13,7 +11,7 @@ public class VideoFile {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public VideoFile(String title, String location, String uriFile, String url,  String uploaderID) {
+    public VideoFile(String title, String location, String uriFile, String url, String uploaderID) {
         this.title = title;
         this.location = location;
         this.uriFile = uriFile;

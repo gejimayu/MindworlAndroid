@@ -1,7 +1,5 @@
 package com.mindworld.howtosurvive.mindworld.models;
 
-import android.net.Uri;
-
 public class TextFile {
     public String title;
     public String location;
