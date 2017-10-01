@@ -34,8 +34,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static final String EXTRA_USER_ID = "com.mindworld.howtosurvive.mindworld.extra.USER_ID";
     public static final String EXTRA_USER_LOCALITY = "com.mindworld.howtosurvive.mindworld.extra.USER_LOCALITY";
 
+    private static final int READ_FILE_BROWSER_REQUEST_CODE = 1001;
+
     private static final int ACCESS_COARSE_LOCATION_PERMISSION_CODE = 2003;
-    private static final int READ_FILE_BROWSER_REQUEST_CODE = 2001;
     private static final int READ_EXTERNAL_STORAGE_PERMISSION_CODE = 2002;
 
     private static final String SHARED_PREF_FILE = "com.mindworld.howtosurvive.mindworld";
