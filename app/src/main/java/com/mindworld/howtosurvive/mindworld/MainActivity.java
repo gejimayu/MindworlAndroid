@@ -174,22 +174,22 @@ public class MainActivity extends AppCompatActivity {
 
                         if (mimetype.contains("image")) {
                             @SuppressWarnings("VisibleForTests")
-                            ImageFile imageUploadInfo = new ImageFile(filename.getTitle(context), filelocation, fileUri.toString(),
-                                    downloadUrl);
+                            ImageFile imageUploadInfo = new ImageFile(filename.getTitle(context),
+                                    filelocation, fileUri.toString(), downloadUrl, mUserId);
                             //push into database
                             db = mDatabase.child("image").push();
                             db.setValue(imageUploadInfo);
                         } else if (mimetype.contains("text")) {
                             @SuppressWarnings("VisibleForTests")
-                            TextFile txt = new TextFile(filename.getTitle(context), filelocation, fileUri.toString(),
-                                    downloadUrl);
+                            TextFile txt = new TextFile(filename.getTitle(context), filelocation,
+                                    fileUri.toString(), downloadUrl, mUserId);
                             // push into database
                             db = mDatabase.child("text").push();
                             db.setValue(txt);
                         } else if (mimetype.contains("video")) {
                             @SuppressWarnings("VisibleForTests")
-                            VideoFile vid = new VideoFile(filename.getTitle(context), filelocation, fileUri.toString(),
-                                    downloadUrl);
+                            VideoFile vid = new VideoFile(filename.getTitle(context), filelocation,
+                                    fileUri.toString(), downloadUrl, mUserId);
                             // push into database
                             db = mDatabase.child("video").push();
                             db.setValue(vid);

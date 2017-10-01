@@ -91,7 +91,7 @@ public class WriteActivity extends AppCompatActivity {
 
                     DatabaseReference db;
                     @SuppressWarnings("VisibleForTests")
-                    TextFile txt = new TextFile(filename, filelocation, null, taskSnapshot.getDownloadUrl().toString());
+                    TextFile txt = new TextFile(mUserId, filename, filelocation, null, taskSnapshot.getDownloadUrl().toString());
                     db = mDatabase.child("text").push();
                     db.setValue(txt);
                 }
