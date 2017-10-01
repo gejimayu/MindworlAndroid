@@ -2,8 +2,9 @@ package com.mindworld.howtosurvive.mindworld;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
@@ -17,11 +18,16 @@ import com.mindworld.howtosurvive.mindworld.models.ImageFile;
 import com.mindworld.howtosurvive.mindworld.models.TextFile;
 import com.mindworld.howtosurvive.mindworld.models.VideoFile;
 
+import java.io.File;
+
 public class MindMemory {
     private Context mContext;
+
     private String mUserId;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
+
+    private String mFileName;
     private String mLocality;
 
     public MindMemory(Context context, String userId, StorageReference storageRef, DatabaseReference databaseRef, String locality) {
@@ -51,9 +57,31 @@ public class MindMemory {
     }
 
     public void uploadMemory(Intent data) {
-        // get selected file's URI
+        // get selected file URI
         final Uri fileUri = data.getData();
-        // build file's metadata
+        String fileUriString = fileUri.toString();
+
+        // get selected file cursor
+        File file = new File(fileUriString);
+        String path = file.getAbsolutePath();
+        Cursor fileCursor = mContext.getContentResolver().query(fileUri, null, null, null, null);
+
+        // get file name
+        if (fileUriString.startsWith("content://")) {
+            Cursor cursor = null;
+            try {
+                cursor = mContext.getContentResolver().query(fileUri, null, null, null, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    mFileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        } else if (fileUriString.startsWith("file://")) {
+            mFileName = file.getName();
+        }
+
+        // build file metadata
         final String mimetype = mContext.getContentResolver().getType(fileUri);
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType(mimetype)
@@ -61,9 +89,6 @@ public class MindMemory {
         // upload file to Firebase Cloud Storage
         StorageReference memoryRef = mStorageRef.child("user/" + mUserId + "/" + fileUri.getLastPathSegment());
         UploadTask uploadTask = memoryRef.putFile(fileUri, metadata);
-
-        // get file name
-        final String filename = RingtoneManager.getRingtone(mContext, fileUri).getTitle(mContext);
 
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
@@ -79,21 +104,21 @@ public class MindMemory {
                 DatabaseReference databaseReference;
                 if (mimetype.contains("image")) {
                     @SuppressWarnings("VisibleForTests")
-                    ImageFile imageUploadInfo = new ImageFile(filename, mLocality, fileUri.toString(),
+                    ImageFile imageUploadInfo = new ImageFile(mFileName, mLocality, fileUri.toString(),
                             taskSnapshot.getDownloadUrl().toString(), mUserId);
                     //push into database
                     databaseReference = mDatabaseRef.child("image").push();
                     databaseReference.setValue(imageUploadInfo);
                 } else if (mimetype.contains("text")) {
                     @SuppressWarnings("VisibleForTests")
-                    TextFile textUploadInfo = new TextFile(filename, mLocality, fileUri.toString(),
+                    TextFile textUploadInfo = new TextFile(mFileName, mLocality, fileUri.toString(),
                             taskSnapshot.getDownloadUrl().toString(), mUserId);
                     // push into database
                     databaseReference = mDatabaseRef.child("text").push();
                     databaseReference.setValue(textUploadInfo);
                 } else if (mimetype.contains("video")) {
                     @SuppressWarnings("VisibleForTests")
-                    VideoFile videoUploadInfo = new VideoFile(filename, mLocality, fileUri.toString(),
+                    VideoFile videoUploadInfo = new VideoFile(mFileName, mLocality, fileUri.toString(),
                             taskSnapshot.getDownloadUrl().toString(), mUserId);
                     // push into database
                     databaseReference = mDatabaseRef.child("video").push();

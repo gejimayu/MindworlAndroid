@@ -53,7 +53,7 @@ public class WriteActivity extends AppCompatActivity {
         String text = memoryText.getText().toString();
 
         EditText memoryName = (EditText) findViewById(R.id.memory_name);
-        final String filename = memoryName.getText().toString();
+        final String filename = memoryName.getText().toString() + ".txt";
 
         FileOutputStream outputStream;
 
@@ -63,10 +63,10 @@ public class WriteActivity extends AppCompatActivity {
             outputStream.write(text.getBytes());
             outputStream.close();
 
-            // get <mFilename>.txt's URI
+            // get <mFilename>.txt URI
             File file = new File(getFilesDir() + "/" + filename);
             Uri fileUri = Uri.fromFile(file);
-            // build <mFilename>.txt's metadata
+            // build <mFilename>.txt metadata
             StorageMetadata metadata = new StorageMetadata.Builder()
                     .setContentType("text/plain")
                     .build();
