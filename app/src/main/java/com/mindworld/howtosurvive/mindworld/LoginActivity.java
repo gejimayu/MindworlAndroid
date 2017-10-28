@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             findViewById(R.id.sign_in).setVisibility(View.GONE);
 
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(EXTRA_USER_ID, user.getUid());
+            intent.putExtra(EXTRA_USER_ID, user.getEmail());
 
             startActivityForResult(intent, SIGN_OUT_REQUEST_CODE);
         } else {
