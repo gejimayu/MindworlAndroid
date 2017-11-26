@@ -11,6 +11,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -18,6 +19,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +29,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     public static final String EXTRA_REPLY = "com.mindworld.howtosurvive.mindworld.extra.REPLY";
@@ -41,14 +56,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private static final String SHARED_PREF_FILE = "com.mindworld.howtosurvive.mindworld";
     public static String mUserId;
+
     Sensor mAccelerometer;
     Sensor mMagnetometer;
     float[] mGravity;
     float[] mGeomagnetic;
     float mPitch;
+
     TabLayout mTabLayout;
     ViewPager mViewPager;
     View mView;
+
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private SharedPreferences mPreferences;
@@ -57,9 +75,52 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private UserLocation mUserLocation;
     private MindMemory mMindMemory;
 
+    private static String getJSON() {
+        HttpsURLConnection connection = null;
+
+        try {
+            URL url = new URL("https://mindworld-4964e.firebaseio.com/env.json");
+            connection = (HttpsURLConnection) url.openConnection();
+            connection.connect();
+
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder stringBuilder = new StringBuilder();
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line + "\n");
+            }
+            bufferedReader.close();
+
+            return stringBuilder.toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.disconnect();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return null;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        String data = getJSON();
+        if (data != null && data.contains("night")) {
+            setTheme(R.style.AppThemeDark);
+        }
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -128,6 +189,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onResume() {
         super.onResume();
+
+        String data = getJSON();
+        if (data != null && data.contains("night")) {
+            setTheme(R.style.AppThemeDark);
+        }
+
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_UI);
     }
@@ -135,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onPause() {
         super.onPause();
+
         mSensorManager.unregisterListener(this);
     }
 
@@ -147,7 +215,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.sign_out) {
+        if (item.getItemId() == R.id.refresh) {
+            finish();
+            startActivity(getIntent());
+
+            return true;
+        } else if (item.getItemId() == R.id.sign_out) {
             Intent intent = new Intent();
             intent.putExtra(EXTRA_REPLY, "OK");
             setResult(RESULT_OK, intent);
